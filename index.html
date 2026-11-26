@@ -228,6 +228,7 @@ function authMode(mode){el('signup-form').hidden=mode!=='signup';el('login-form'
 el('show-signup').onclick=()=>authMode('signup'); el('show-login').onclick=()=>authMode('login');
 async function refreshSession(){
  const {data:{session}}=await sb.auth.getSession(); currentUser=session?.user||null;
+ if(currentUser&&typeof watchCalls==='function')watchCalls();
  el('auth-forms').hidden=!!currentUser;el('signed-in-panel').hidden=!currentUser;
  el('account-status').textContent=currentUser?'Signed in':'Not signed in';
  el('account-title').textContent=currentUser?'Your account':'Join KALAN';
