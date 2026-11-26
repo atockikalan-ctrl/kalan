@@ -1,0 +1,93 @@
+name: Prepare additional Minecraft browser clients
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "games/minecraft-1206/**"
+      - "games/minecraft-112/**"
+      - "games/minecraft-1112/**"
+      - "games/minecraft-1710/**"
+      - "games/minecraft-172/**"
+
+permissions:
+  contents: write
+
+jobs:
+  prepare-clients:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out KALANGAMER
+        uses: actions/checkout@v4
+
+      - name: Download, compress, and build self-hosted loaders
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          declare -A SOURCES=(
+            ["1206"]="EaglercraftX%201.20.6%20WASM.html"
+            ["112"]="Eaglercraft%201.12%20EN.html"
+            ["1112"]="Eaglercraft%201.11.2.html"
+            ["1710"]="EaglercraftX%201.7.10%20WASM.html"
+            ["172"]="EaglerLite%20v1.7.2.html"
+          )
+          declare -A TITLES=(
+            ["1206"]="Minecraft 1.20.6"
+            ["112"]="Minecraft 1.12"
+            ["1112"]="Minecraft 1.11.2"
+            ["1710"]="Minecraft 1.7.10"
+            ["172"]="Minecraft 1.7.2"
+          )
+
+          for version in 1206 112 1112 1710 172; do
+            dir="games/minecraft-$version"
+            mkdir -p "$dir"
+            source="${SOURCES[$version]}"
+            title="${TITLES[$version]}"
+            curl --fail --location --retry 3 \
+              "https://raw.githubusercontent.com/MilkdromedaStudios/all-of-eaglercraft/main/$source" \
+              --output "/tmp/client-$version.html"
+            test "$(wc -c < "/tmp/client-$version.html")" -gt 1000000
+
+            gzip -9 -c "/tmp/client-$version.html" > "/tmp/client-$version.html.gz"
+            rm -f "$dir"/client.part*
+            split -b 18m -d -a 2 "/tmp/client-$version.html.gz" "$dir/client.part"
+            count=$(find "$dir" -maxdepth 1 -name 'client.part*' | wc -l | tr -d ' ')
+            test "$count" -ge 1
+
+            cat > "$dir/index.html" <<HTML
+          <!doctype html>
+          <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>$title</title>
+          <style>html,body{margin:0;width:100%;height:100%;background:#111;color:#eee;font:16px system-ui;display:grid;place-items:center}#status{text-align:center;padding:24px}</style>
+          </head><body><div id="status">Loading $title…<br><small>Downloading game files</small></div>
+          <script>
+          (async()=>{const status=document.getElementById('status');try{
+            const parts=[];
+            for(let i=0;i<$count;i++){
+              const name='client.part'+String(i).padStart(2,'0');
+              const response=await fetch(name);
+              if(!response.ok)throw new Error('Could not load '+name+' ('+response.status+')');
+              parts.push(await response.blob());
+              status.innerHTML='Loading $title…<br><small>Downloaded part '+(i+1)+' of $count</small>';
+            }
+            if(!('DecompressionStream' in window))throw new Error('This browser does not support gzip decompression.');
+            const html=await new Response(new Blob(parts).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+            document.open();document.write(html);document.close();
+          }catch(error){status.textContent='Minecraft could not load: '+error.message;}})();
+          </script></body></html>
+          HTML
+            echo "Prepared $title ($count parts)"
+          done
+
+      - name: Commit hosted Minecraft clients
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add games/minecraft-1206/ games/minecraft-112/ games/minecraft-1112/ games/minecraft-1710/ games/minecraft-172/
+          if git diff --cached --quiet; then
+            echo "Minecraft clients are already up to date."
+            exit 0
+          fi
+          git commit -m "Add self-hosted Minecraft browser clients"
+          git push
