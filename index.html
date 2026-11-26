@@ -518,9 +518,9 @@ if(patch.avatar_url||patch.banner_url){const {error:artError}=await db.from('pro
 $('profile-modal').classList.remove('open');toast('Profile updated!');await refresh();};
  document.addEventListener('click',e=>{const a=e.target.closest('[data-add-friend]');if(a)addFriend(a.dataset.addFriend);const ok=e.target.closest('[data-accept-request]');if(ok)respond(ok.dataset.acceptRequest,'accepted');const no=e.target.closest('[data-decline-request]');if(no)respond(no.dataset.declineRequest,'declined');const cancel=e.target.closest('[data-cancel-request]');if(cancel)removeFriend(cancel.dataset.cancelRequest);const rm=e.target.closest('[data-remove-friend]');if(rm)removeFriend(rm.dataset.removeFriend);const vp=e.target.closest('[data-view-profile]');if(vp)viewProfile(vp.dataset.viewProfile);const ban=e.target.closest('[data-admin-ban]');if(ban){const reason=prompt('Why are you banning this player? (Optional)');if(reason!==null)adminAction('ban',ban.dataset.adminBan,reason);}const unban=e.target.closest('[data-admin-unban]');if(unban&&confirm('Unban this player?'))adminAction('unban',unban.dataset.adminUnban);});
  window.kalanRefreshCommunity=refresh;
- window.kalanCommunityAuthState='Community auth hook ready';
- db.auth.onAuthStateChange((_event,session)=>{window.kalanCommunityAuthState=session?.user?'Auth event: signed in':'Auth event: signed out';setTimeout(()=>refresh(session?.user||null),0);});
- if(Object.prototype.hasOwnProperty.call(window,'kalanCurrentUser')) refresh(window.kalanCurrentUser); else refresh();
+ window.kalanCommunityAuthState='Waiting for primary account session';
+ // The primary account controller is the sole auth-session authority.
+ // It calls this function with its resolved user after every auth event.
 })();
 
 </script>
