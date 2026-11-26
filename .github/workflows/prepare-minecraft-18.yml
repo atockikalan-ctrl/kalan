@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - "games/minecraft-18/EaglercraftX-1.8-WASM.html"
+      - "games/minecraft-18/**"
 
 permissions:
   contents: write
@@ -24,14 +24,30 @@ jobs:
             --output games/minecraft-18/EaglercraftX-1.8-WASM.html
           test "$(wc -c < games/minecraft-18/EaglercraftX-1.8-WASM.html)" -gt 15000000
 
+          # EaglercraftX also needs its matching 1.8.8 resource pack.
+          curl --fail --location --retry 3 \
+            "https://raw.githubusercontent.com/neon443/eaglercraftX188/main/assets.epk" \
+            --output games/minecraft-18/assets.epk
+          test "$(wc -c < games/minecraft-18/assets.epk)" -gt 5000000
+
+          # Keep the language files beside the client, as its default lang/ path expects.
+          mkdir -p games/minecraft-18/lang
+          curl --fail --location --retry 3 \
+            "https://api.github.com/repos/neon443/eaglercraftX188/contents/lang" \
+            --output /tmp/eagler-lang-list.json
+          jq -r '.[] | select(.type == "file" and (.name | endswith(".lang"))) | .download_url + " " + .name' /tmp/eagler-lang-list.json |
+          while read -r url filename; do
+            curl --fail --location --retry 3 "$url" --output "games/minecraft-18/lang/$filename"
+          done
+
       - name: Commit hosted game client
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add games/minecraft-18/EaglercraftX-1.8-WASM.html
+          git add games/minecraft-18/
           if git diff --cached --quiet; then
             echo "Client is already up to date."
             exit 0
           fi
-          git commit -m "Add self-hosted Minecraft 1.8 WASM client"
+          git commit -m "Add Minecraft 1.8.8 resource pack and languages"
           git push
