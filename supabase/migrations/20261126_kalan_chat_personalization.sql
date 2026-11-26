@@ -94,12 +94,12 @@ using (
     (message_kind = 'direct' and exists (
       select 1 from public.messages m
       join public.conversations c on c.id = m.conversation_id
-      where m.id = message_id and m.conversation_id = conversation_id
+      where m.id = message_id and m.conversation_id = saved_messages.conversation_id
         and (c.participant_one = (select auth.uid()) or c.participant_two = (select auth.uid()))
     ))
     or (message_kind = 'group' and exists (
       select 1 from public.group_messages gm
-      where gm.id = message_id and gm.conversation_id = conversation_id
+      where gm.id = message_id and gm.conversation_id = saved_messages.conversation_id
         and private.is_group_chat_member(gm.conversation_id)
     ))
   )
@@ -112,12 +112,12 @@ with check (
     (message_kind = 'direct' and exists (
       select 1 from public.messages m
       join public.conversations c on c.id = m.conversation_id
-      where m.id = message_id and m.conversation_id = conversation_id
+      where m.id = message_id and m.conversation_id = saved_messages.conversation_id
         and (c.participant_one = (select auth.uid()) or c.participant_two = (select auth.uid()))
     ))
     or (message_kind = 'group' and exists (
       select 1 from public.group_messages gm
-      where gm.id = message_id and gm.conversation_id = conversation_id
+      where gm.id = message_id and gm.conversation_id = saved_messages.conversation_id
         and private.is_group_chat_member(gm.conversation_id)
     ))
   )
