@@ -390,7 +390,9 @@ async function loadMessages(){
 async function blockUser(id){const {error}=await sb.from('blocks').insert({blocker_id:currentUser.id,blocked_id:id});if(error){note(error.message);return;}note('User blocked.');currentConversation=null;await loadConversations();el('real-chat-main').innerHTML='<div class="chat-empty"><b>User blocked.</b><span>They can no longer message you.</span></div>';}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-open-group]');if(g){currentConversation=g.dataset.openGroup;currentGroupChat=true;loadConversations();loadGroupMessages();}const m=e.target.closest('[data-message-user]');if(m)openConversation(m.dataset.messageUser);const b=e.target.closest('[data-block-user]');if(b)blockUser(b.dataset.blockUser);const c=e.target.closest('[data-open-chat]');if(c){currentConversation=c.dataset.openChat;currentGroupChat=false;loadConversations();loadMessages();}});
 sb.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>refreshSession(session),0);});
-watchCalls();
+// refreshSession() starts call watching only after a real user session is known.
+// Calling watchCalls() here runs before currentUser is initialized and aborts the
+// remainder of this script, preventing the Community handler from registering.
 refreshSession();
 })();
 
