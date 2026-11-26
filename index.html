@@ -227,8 +227,8 @@ const safe = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&l
 const note = s => { const t=el('toast'); t.textContent=s; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); };
 function authMode(mode){el('signup-form').hidden=mode!=='signup';el('login-form').hidden=mode!=='login';el('show-signup').classList.toggle('active',mode==='signup');el('show-login').classList.toggle('active',mode==='login');}
 el('show-signup').onclick=()=>authMode('signup'); el('show-login').onclick=()=>authMode('login');
-async function refreshSession(){
- const {data:{session}}=await sb.auth.getSession(); currentUser=session?.user||null;
+async function refreshSession(sessionValue){
+ if(arguments.length){currentUser=sessionValue?.user||null;}else{const {data:{session}}=await sb.auth.getSession();currentUser=session?.user||null;}
   if(typeof window.kalanRefreshCommunity==='function') await window.kalanRefreshCommunity(currentUser);
  if(currentUser&&typeof watchCalls==='function')watchCalls();
  el('auth-forms').hidden=!!currentUser;el('signed-in-panel').hidden=!currentUser;
@@ -387,7 +387,7 @@ async function loadMessages(){
 }
 async function blockUser(id){const {error}=await sb.from('blocks').insert({blocker_id:currentUser.id,blocked_id:id});if(error){note(error.message);return;}note('User blocked.');currentConversation=null;await loadConversations();el('real-chat-main').innerHTML='<div class="chat-empty"><b>User blocked.</b><span>They can no longer message you.</span></div>';}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-open-group]');if(g){currentConversation=g.dataset.openGroup;currentGroupChat=true;loadConversations();loadGroupMessages();}const m=e.target.closest('[data-message-user]');if(m)openConversation(m.dataset.messageUser);const b=e.target.closest('[data-block-user]');if(b)blockUser(b.dataset.blockUser);const c=e.target.closest('[data-open-chat]');if(c){currentConversation=c.dataset.openChat;currentGroupChat=false;loadConversations();loadMessages();}});
-sb.auth.onAuthStateChange((_event)=>{refreshSession();});
+sb.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>refreshSession(session),0);});
 watchCalls();
 refreshSession();
 })();
@@ -477,7 +477,6 @@ if(patch.avatar_url||patch.banner_url){const {error:artError}=await db.from('pro
 $('profile-modal').classList.remove('open');toast('Profile updated!');await refresh();};
  document.addEventListener('click',e=>{const a=e.target.closest('[data-add-friend]');if(a)addFriend(a.dataset.addFriend);const ok=e.target.closest('[data-accept-request]');if(ok)respond(ok.dataset.acceptRequest,'accepted');const no=e.target.closest('[data-decline-request]');if(no)respond(no.dataset.declineRequest,'declined');const cancel=e.target.closest('[data-cancel-request]');if(cancel)removeFriend(cancel.dataset.cancelRequest);const rm=e.target.closest('[data-remove-friend]');if(rm)removeFriend(rm.dataset.removeFriend);const vp=e.target.closest('[data-view-profile]');if(vp)viewProfile(vp.dataset.viewProfile);const ban=e.target.closest('[data-admin-ban]');if(ban){const reason=prompt('Why are you banning this player? (Optional)');if(reason!==null)adminAction('ban',ban.dataset.adminBan,reason);}const unban=e.target.closest('[data-admin-unban]');if(unban&&confirm('Unban this player?'))adminAction('unban',unban.dataset.adminUnban);});
  window.kalanRefreshCommunity=refresh;
-  db.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>refresh(session?.user||null),0);});refresh();
 })();
 
 </script>
