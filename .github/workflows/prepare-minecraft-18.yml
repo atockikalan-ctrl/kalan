@@ -16,28 +16,42 @@ jobs:
       - name: Check out KALANGAMER
         uses: actions/checkout@v4
 
-      - name: Download Eaglercraft 1.13.2 English client
+      - name: Download and compress Eaglercraft 1.13.2 English client
         run: |
           mkdir -p games/minecraft-1132
           curl --fail --location --retry 3 \
             "https://raw.githubusercontent.com/MilkdromedaStudios/all-of-eaglercraft/main/Eaglercraft%201.13.2%20EN.html" \
-            --output games/minecraft-1132/Eaglercraft-1.13.2-EN.html
+            --output /tmp/Eaglercraft-1.13.2-EN.html
 
-          size="$(wc -c < games/minecraft-1132/Eaglercraft-1.13.2-EN.html)"
-          echo "Downloaded client size: $size bytes"
-          test "$size" -gt 10000000
-          # Cloudflare Pages has a per-file upload limit; fail clearly if exceeded.
-          test "$size" -lt 25000000
+          original="$(wc -c < /tmp/Eaglercraft-1.13.2-EN.html)"
+          echo "Original client size: $original bytes"
+          test "$original" -gt 50000000
+
+          # Cloudflare Pages limits individual deployed files to 25 MiB.
+          # Serve the gzip-compressed HTML with Content-Encoding: gzip.
+          gzip -9 -c /tmp/Eaglercraft-1.13.2-EN.html > games/minecraft-1132/Eaglercraft-1.13.2-EN.html
+          compressed="$(wc -c < games/minecraft-1132/Eaglercraft-1.13.2-EN.html)"
+          echo "Compressed client size: $compressed bytes"
+          test "$compressed" -lt 25000000
+
+      - name: Configure compressed HTML response
+        run: |
+          cat >> _headers <<'HEADERS'
+
+          /games/minecraft-1132/Eaglercraft-1.13.2-EN.html
+            Content-Type: text/html; charset=utf-8
+            Content-Encoding: gzip
+          HEADERS
 
       - name: Remove the broken 1.8.8 client and commit 1.13.2
         run: |
           rm -rf games/minecraft-18
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A games/minecraft-18/ games/minecraft-1132/
+          git add -A _headers games/minecraft-18/ games/minecraft-1132/
           if git diff --cached --quiet; then
             echo "Minecraft 1.13.2 client is already up to date."
             exit 0
           fi
-          git commit -m "Replace Minecraft 1.8.8 with Eaglercraft 1.13.2"
+          git commit -m "Replace Minecraft 1.8.8 with compressed Eaglercraft 1.13.2"
           git push
