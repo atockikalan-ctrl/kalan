@@ -31,6 +31,10 @@ create index if not exists media_shares_user_idx on public.media_shares (user_id
 alter table public.media_items enable row level security;
 alter table public.media_shares enable row level security;
 
+grant select on public.media_items to anon, authenticated;
+grant insert, update, delete on public.media_items to authenticated;
+grant select, insert, delete on public.media_shares to authenticated;
+
 drop policy if exists "Media is visible to its audience" on public.media_items;
 create policy "Media is visible to its audience"
 on public.media_items for select to anon, authenticated
