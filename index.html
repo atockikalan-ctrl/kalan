@@ -147,7 +147,7 @@ sb.auth.onAuthStateChange((_event)=>{refreshSession();});
 refreshSession();
 })();
 
-<script>
+
 (() => {
  const db = window.supabase.createClient('https://oylzvrngrjfbsawmtjll.supabase.co','sb_publishable_bPRkvpp5H8Imv2xvf34yaw_t9nbQAZO');
  const $ = id => document.getElementById(id);
@@ -209,5 +209,5 @@ refreshSession();
  document.addEventListener('click',e=>{const a=e.target.closest('[data-add-friend]');if(a)addFriend(a.dataset.addFriend);const ok=e.target.closest('[data-accept-request]');if(ok)respond(ok.dataset.acceptRequest,'accepted');const no=e.target.closest('[data-decline-request]');if(no)respond(no.dataset.declineRequest,'declined');const cancel=e.target.closest('[data-cancel-request]');if(cancel)removeFriend(cancel.dataset.cancelRequest);const rm=e.target.closest('[data-remove-friend]');if(rm)removeFriend(rm.dataset.removeFriend);const vp=e.target.closest('[data-view-profile]');if(vp)viewProfile(vp.dataset.viewProfile);});
  db.auth.onAuthStateChange(()=>{setTimeout(refresh,0);});refresh();
 })();
-</script>
+
 </script></body></html>
