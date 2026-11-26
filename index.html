@@ -123,7 +123,7 @@ body{background:var(--bg);color:var(--text);font-size:14px}
 .public-banner-art{height:178px;background-position:center;background-size:cover}
 @media(max-width:720px){.public-banner-art{height:140px}.art-upload-grid{grid-template-columns:1fr}}
 
-</style></head>
+.call-tools{display:flex;gap:5px;margin-left:auto}.call-tools button{border:1px solid #343d52;background:#171e2d;border-radius:6px;padding:6px 8px;font-size:9px}@media(max-width:720px){#call-videos{grid-template-columns:1fr!important}}.call-video-placeholder{display:none}</style></head>
 <body><div class="shell">
 <aside class="sidebar" id="sidebar"><a class="brand" href="#"><span class="brand-mark">K</span>kalan<em>.</em></a><div class="side-label">MENU</div><nav class="nav"><button class="active" data-page="home"><span>⌂</span>Home</button><button data-page="minecraft-hub"><span>⛏</span>Minecraft</button><button data-page="discover"><span>⌕</span>Discover</button><button data-page="library"><span>▣</span>My library</button><button data-page="community"><span>◉</span>Community</button><button data-page="friends"><span>♧</span>Friends</button><button data-page="messages"><span>✉</span>Messages</button></nav><div class="side-label spacer">YOUR SPACE</div><nav class="nav"><button data-page="profile"><span>♙</span>My profile</button><button data-page="leaderboards"><span>♜</span>Leaderboards</button></nav><div class="sidebar-bottom"><div class="tip"><div style="color:#b7a5ff;margin-bottom:8px">✦ YOUR NEXT ADVENTURE</div><b>Find something new to play.</b><p>A whole universe is waiting.</p><button data-page="discover">Explore games →</button></div><div class="user-mini"><div class="avatar" id="side-avatar">K</div><div><b id="side-name">Kalan</b><small id="side-handle">@kalan</small></div></div></div></aside>
 <main class="main"><header class="topbar"><button class="mobile-menu" id="menu">☰</button><div class="crumb">KALAN <span style="color:#424b5e"> / </span> <b id="crumb">HOME</b></div><div class="actions"><input class="search" id="search" placeholder="Search games, players..."><button class="top-avatar" data-page="profile">K</button></div></header>
@@ -172,7 +172,7 @@ body{background:var(--bg);color:var(--text);font-size:14px}
 <section class="page" id="page-leaderboards"><div class="page-head"><div class="eyebrow">THE COMPETITION</div><h1>Leaderboards<span>.</span></h1><p class="muted">A little friendly competition never hurt.</p></div><div class="panel" style="max-width:650px"><div class="empty"><b>No leaderboard data yet.</b><p>Leaderboards will appear when KALAN has real player accounts and recorded scores.</p></div></div></section>
 <footer class="footer"><span>© 2026 KALAN</span><span>Made for players, by players.</span><span><i class="live"></i>Prototype online</span></footer></main></div>
 <div class="modal" id="profile-modal"><form id="profile-form"><div class="panel-head"><h3>Edit your profile</h3><button type="button" class="link" data-close>✕</button></div><label>Display name<input id="edit-name" maxlength="24" required></label><label>Bio<textarea id="edit-bio" rows="3" maxlength="160" placeholder="A little about you..."></textarea></label><label>Favorite game<input id="edit-favorite" maxlength="40" placeholder="What are you playing?"></label><label>Status message<input id="edit-status" maxlength="60" placeholder="What are you up to?"></label><div class="art-upload-grid"><label>Profile picture<input id="edit-avatar-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4"><small>PNG, JPG, WebP, GIF or MP4 · up to 20 MB</small></label><label>Profile banner<input id="edit-banner-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4"><small>Wide image recommended · up to 20 MB</small></label></div><button class="primary" style="width:100%">Save changes</button></form></div><div class="modal" id="public-profile-modal"><div class="panel-head"><h3>Player profile</h3><button class="link" data-close>✕</button></div><div id="public-profile-content"></div></div>
-<div class="modal" id="players-modal"><div class="panel-head"><h3>Start a conversation</h3><button class="link" data-close>✕</button></div><div id="player-picker"></div></div><div class="toast" id="toast"></div>
+<div class="modal" id="players-modal"><div class="panel-head"><h3>Start a conversation</h3><button class="link" data-close>✕</button></div><div id="player-picker"></div></div><div class="modal" id="call-modal" style="width:min(760px,calc(100% - 24px));max-height:90vh;overflow:auto"><div class="panel-head"><h3 id="call-title">KALAN call</h3><button class="link" id="call-close">✕</button></div><div id="incoming-call" hidden><p id="incoming-call-label">Incoming call…</p><div style="display:flex;gap:8px"><button class="primary" id="accept-call">Accept</button><button class="friend-action" id="decline-call">Decline</button></div></div><div id="active-call" hidden><div id="call-videos" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px"><video id="remote-video" autoplay playsinline style="width:100%;max-height:360px;background:#080b12;border-radius:12px"></video><video id="local-video" autoplay muted playsinline style="width:100%;max-height:220px;background:#080b12;border-radius:12px"></video></div><p id="call-status" class="muted">Connecting…</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="friend-action" id="toggle-mic">Mute mic</button><button class="friend-action" id="toggle-camera">Turn camera on</button><button class="friend-action" id="hangup-call" style="border-color:#a44;color:#ffaaaa">Hang up</button></div></div><p id="call-note" class="muted" style="font-size:11px">Calls use your browser’s microphone and camera permissions. Camera starts off.</p></div><div class="toast" id="toast"></div>
 <script>
 function profileMedia(url,alt,cls=''){const path=String(url).split('?')[0].toLowerCase(),video=path.endsWith('.mp4');return video?'<video class="'+cls+'" src="'+esc(url)+'" aria-label="'+esc(alt)+'" autoplay muted loop playsinline></video>':'<img class="'+cls+'" src="'+esc(url)+'" alt="'+esc(alt)+'">';}
 const games = [['undertale','Undertale','Adventure','A little game with a big heart.','9.9','3.1k','♥',3],['ultra','ULTRAKILL','Action','Fast, loud, and unapologetic.','9.6','1.2k','U',6],['minecraft','Minecraft 1.5.5','Adventure','Build, explore, and survive.','9.8','2.4k','M',7],['minecraft-1122','Minecraft 1.12.2','Adventure','The World of Color update, playable in your browser.','—','Browser','M 1.12',7],['minecraft-1132','Minecraft 1.13.2','Adventure','The Eaglercraft 1.13.2 browser edition, hosted directly by KALANGAMER.','—','Browser','M 1.8',7],['hollow-knight','Hollow Knight','Adventure','Descend into a forgotten kingdom.','9.8','2.8k','HK',5],['among-us','Among Us','Arcade','Find the impostor. Trust no one.','9.5','3.6k','AM',8],['salty-seas','Salty Seas','Arcade','Set sail and explore Salty Seas.','—','New','SS',2],['fnaf',"Five Nights at Freddy's",'Horror','Survive five nights at Freddy Fazbear’s Pizza.','9.8','New','FNAF',3],['deltarune','Deltarune','Adventure','A strange journey through a world of darkness and friendship.','9.9','New','DR',5],['street-fighter-2','Street Fighter II','Action','Choose your fighter and battle for victory.','9.6','New','SFII',4],['retro-bowl','Retro Bowl','Arcade','Build your football dynasty and lead your team to victory.','9.7','New','RB',6],['super-hot','SUPERHOT','Action','Time moves only when you move.','9.7','New','SH',5],['tetris','Tetris','Puzzle','Stack blocks, clear lines, and chase a high score.','New','New','T',4],['level-devil','Level Devil','Arcade','A tricky platformer full of unexpected traps.','New','New','LD',5],['basketball-shoot','Basketball Shoot','Sports','Aim your shots and see how many baskets you can make.','New','New','BS',4],['kongregate-run3','Run 3','Arcade','Run through twisting tunnels in space.','New','New','R3',5],['playhubo-35lbe','PlayHubo Game 35LBE','Arcade','A browser game hosted on PlayHubo.','New','New','35',4],['playhubo-40214','PlayHubo Game 40214','Arcade','A browser game hosted on PlayHubo.','New','New','40',4],['subway-surfers','Subway Surfers','Arcade','Dash through the subway, dodge obstacles, and collect coins.','New','New','SS',5],['air-hockey','Air Hockey','Sports','Challenge the opponent in a classic air hockey match.','New','New','AH',4],['geometry-dash','Geometry Dash','Arcade','Jump, fly, and survive the rhythm.','New','New','GD',5],['trex-runner','T-Rex Runner','Arcade','Run, jump, and dodge obstacles.','New','New','TR',3],['3d-tennis','3D Tennis','Sports','Take to the court and win the match.','New','New','3D',4],['classic-snake','Classic Snake','Arcade','Eat, grow, and avoid your own tail.','New','New','SN',3],['pong','Pong','Arcade','The classic paddle-and-ball showdown.','New','New','P',3],['bloons-td-5','Bloons TD 5','Strategy','Build towers and stop the bloon waves.','New','New','B5',5],['little-alchemy','Little Alchemy','Puzzle','Combine elements and discover new creations.','New','New','LA',3],['chess','Chess','Strategy','Play classic chess against a friend or bot.','New','New','CH',4],['pokepath-td','PokéPath TD','Strategy','Build a team of Pokémon and defend routes in this tower-defense adventure.','New','New','PTD',5],['pokemon-showdown','Pokémon Showdown','Strategy','Build teams and battle Pokémon trainers online.','New','New','PS',5],['pokemon-fight','Pokémon Fight','Adventure','Explore a 3D Kanto and battle Pokémon in real time.','New','New','PF',5],['pokemon-clicker','Pokémon Clicker','Arcade','Catch Pokémon and grow your collection in this Scratch clicker.','New','New','PC',3],['plants-vs-zombies','Plants vs. Zombies','Strategy','Defend your garden from the zombie invasion.','9.7','1.9k','PVZ',3],['ultra','ULTRAKILL','Action','Fast, loud, and unapologetic.','9.6','1.2k','U',6]];
@@ -300,15 +300,83 @@ async function loadGroupMessages(){
  messageChannel=sb.channel('kalan-group-chat-'+id).on('postgres_changes',{event:'INSERT',schema:'public',table:'group_messages',filter:'conversation_id=eq.'+id},payload=>{if(payload.new.sender_id!==currentUser.id)loadGroupMessages();}).subscribe();
 }
 el('create-group-chat').onclick=createGroupChat;
+
+// KALAN browser-to-browser WebRTC calls. Camera is opt-in; microphone is requested when joining.
+let callChannel=null,callPeer=null,callStream=null,callId=null,callPartner=null,callMode='audio',callInitiator=false,callMicMuted=false,callCameraOn=false,incomingSignal=null;
+const callModal=el('call-modal');
+function showCall(){callModal.classList.add('open');}
+function closeCallUi(){callModal.classList.remove('open');}
+function callNote(msg){el('call-note').textContent=msg;}
+async function sendSignal(type,payload={},recipient=callPartner){
+ if(!callId||!recipient)return;
+ const {error}=await sb.from('call_signals').insert({call_id:callId,sender_id:currentUser.id,recipient_id:recipient,signal_type:type,payload});
+ if(error)note('Call connection error: '+error.message);
+}
+async function prepareMedia(video){
+ try{callStream=await navigator.mediaDevices.getUserMedia({audio:true,video:video?{width:{ideal:1280},height:{ideal:720}}:false});}
+ catch(e){callNote(e.name==='NotAllowedError'?'Allow microphone'+(video?' and camera':'')+' access in your browser, then try again.': 'Could not access your devices: '+e.message);throw e;}
+ el('local-video').srcObject=callStream;callCameraOn=!!video;callMicMuted=false;el('toggle-mic').textContent='Mute mic';el('toggle-camera').textContent=video?'Turn camera off':'Turn camera on';
+}
+function createPeer(){
+ callPeer=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]});
+ callStream?.getTracks().forEach(track=>callPeer.addTrack(track,callStream));
+ callPeer.ontrack=e=>{el('remote-video').srcObject=e.streams[0];};
+ callPeer.onicecandidate=e=>{if(e.candidate)sendSignal('ice',e.candidate.toJSON());};
+ callPeer.onconnectionstatechange=()=>{el('call-status').textContent='Call '+callPeer.connectionState+'.';if(['failed','disconnected'].includes(callPeer.connectionState))callNote('Connection trouble. Some networks require a TURN relay to connect.');};
+}
+async function startCall(mode){
+ if(!currentUser||!currentConversation||currentGroupChat){note('Open a one-to-one friend chat to call. Group calling is coming next.');return;}
+ const {data:conv}=await sb.from('conversations').select('participant_one,participant_two').eq('id',currentConversation).single();if(!conv){note('Could not find this conversation.');return;}
+ callPartner=conv.participant_one===currentUser.id?conv.participant_two:conv.participant_one;
+ callId=crypto.randomUUID();callMode=mode;callInitiator=true;
+ el('incoming-call').hidden=true;el('active-call').hidden=false;el('call-title').textContent=mode==='video'?'Video call':'Voice call';showCall();callNote('Requesting microphone permission…');
+ try{await prepareMedia(false);createPeer();const offer=await callPeer.createOffer();await callPeer.setLocalDescription(offer);await sendSignal('offer',{sdp:callPeer.localDescription.toJSON(),mode,callId});el('call-status').textContent='Calling…';}
+ catch(e){callNote('Call could not start: '+e.message);cleanupCall(false);}
+}
+async function acceptIncoming(){
+ if(!incomingSignal)return;
+ callId=incomingSignal.call_id;callPartner=incomingSignal.sender_id;callMode=incomingSignal.payload?.mode||'audio';callInitiator=false;
+ try{await prepareMedia(false);createPeer();await callPeer.setRemoteDescription(incomingSignal.payload.sdp);const answer=await callPeer.createAnswer();await callPeer.setLocalDescription(answer);await sendSignal('answer',{sdp:callPeer.localDescription.toJSON()});el('incoming-call').hidden=true;el('active-call').hidden=false;el('call-title').textContent=callMode==='video'?'Video call':'Voice call';el('call-status').textContent='Connecting…';callNote('Connected devices may request camera permission if you turn video on.');}
+ catch(e){callNote('Could not join call: '+e.message);cleanupCall(true);}
+}
+async function cleanupCall(notify=true){
+ if(notify&&callPartner&&callId)await sendSignal('hangup',{});
+ if(callChannel){await sb.removeChannel(callChannel);callChannel=null;}
+ if(callPeer){callPeer.close();callPeer=null;}
+ if(callStream){callStream.getTracks().forEach(t=>t.stop());callStream=null;}
+ el('local-video').srcObject=null;el('remote-video').srcObject=null;el('active-call').hidden=true;el('incoming-call').hidden=true;incomingSignal=null;callPartner=null;callId=null;callCameraOn=false;callMicMuted=false;closeCallUi();
+}
+async function handleCallSignal(row){
+ if(row.sender_id===currentUser.id)return;
+ if(row.signal_type==='offer'&&!callId){
+  incomingSignal=row;callId=row.call_id;callPartner=row.sender_id;el('active-call').hidden=true;el('incoming-call').hidden=false;el('incoming-call-label').textContent=(row.payload?.mode==='video'?'Incoming video call':'Incoming voice call')+' from a friend';el('call-title').textContent='Incoming call';callNote('Your camera and microphone stay off until you accept.');showCall();return;
+ }
+ if(!callId||row.call_id!==callId)return;
+ if(row.signal_type==='answer'&&callInitiator&&callPeer)await callPeer.setRemoteDescription(row.payload.sdp);
+ if(row.signal_type==='ice'&&callPeer&&row.payload)try{await callPeer.addIceCandidate(row.payload);}catch(e){}
+ if(row.signal_type==='hangup')cleanupCall(false);
+}
+function watchCalls(){
+ if(callChannel)sb.removeChannel(callChannel);
+ callChannel=sb.channel('kalan-calls-'+currentUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'call_signals',filter:'recipient_id=eq.'+currentUser.id},p=>handleCallSignal(p.new)).subscribe();
+}
+el('call-close').onclick=()=>{if(callId)cleanupCall(true);else closeCallUi();};
+el('accept-call').onclick=acceptIncoming;
+el('decline-call').onclick=()=>cleanupCall(true);
+el('hangup-call').onclick=()=>cleanupCall(true);
+el('toggle-mic').onclick=()=>{if(!callStream)return;callMicMuted=!callMicMuted;callStream.getAudioTracks().forEach(t=>t.enabled=!callMicMuted);el('toggle-mic').textContent=callMicMuted?'Unmute mic':'Mute mic';};
+el('toggle-camera').onclick=async()=>{try{if(!callStream)return;if(!callCameraOn){const cam=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720}}});const track=cam.getVideoTracks()[0];callStream.addTrack(track);const sender=callPeer?.getSenders().find(x=>x.track?.kind==='video');if(sender)await sender.replaceTrack(track);else if(callPeer)callPeer.addTrack(track,callStream);el('local-video').srcObject=callStream;callCameraOn=true;el('toggle-camera').textContent='Turn camera off';}else{callStream.getVideoTracks().forEach(t=>{t.stop();callStream.removeTrack(t);});const sender=callPeer?.getSenders().find(x=>x.track?.kind==='video');if(sender)await sender.replaceTrack(null);callCameraOn=false;el('toggle-camera').textContent='Turn camera on';}}catch(e){callNote('Camera access failed: '+e.message);}};
+
 async function loadMessages(){
  const {data:conv}=await sb.from('conversations').select('participant_one,participant_two').eq('id',currentConversation).single();if(!conv)return;
  const other=conv.participant_one===currentUser.id?conv.participant_two:conv.participant_one;
  const {data:person}=await sb.from('profiles').select('username').eq('id',other).single();
  const {data,error}=await sb.from('messages').select('id,sender_id,body,created_at').eq('conversation_id',currentConversation).order('created_at',{ascending:true}).limit(200);
  if(error){note(error.message);return;}
- el('real-chat-main').innerHTML='<div class="chat-header"><div class="avatar">'+safe((person?.username||'?')[0].toUpperCase())+'</div><div><b>'+safe(person?.username||'KALAN player')+'</b><small>Private conversation</small></div><div class="chat-tools"><button id="report-user">Report</button><button id="block-current">Block</button></div></div><div class="chat-messages" id="real-chat-messages">'+data.map(m=>'<div class="bubble '+(m.sender_id===currentUser.id?'mine':'')+'">'+safe(m.body)+'<div class="chat-message-meta">'+new Date(m.created_at).toLocaleString()+'</div></div>').join('')+'</div><form class="chat-compose" id="send-message-form"><input id="message-body" maxlength="2000" placeholder="Write a message..." autocomplete="off" required><button type="submit">Send</button></form>';
+ el('real-chat-main').innerHTML='<div class="chat-header"><div class="avatar">'+safe((person?.username||'?')[0].toUpperCase())+'</div><div><b>'+safe(person?.username||'KALAN player')+'</b><small>Private conversation</small></div><div class="chat-tools"><button id="voice-call">☎ Voice</button><button id="video-call">▣ Video</button><button id="report-user">Report</button><button id="block-current">Block</button></div></div><div class="chat-messages" id="real-chat-messages">'+data.map(m=>'<div class="bubble '+(m.sender_id===currentUser.id?'mine':'')+'">'+safe(m.body)+'<div class="chat-message-meta">'+new Date(m.created_at).toLocaleString()+'</div></div>').join('')+'</div><form class="chat-compose" id="send-message-form"><input id="message-body" maxlength="2000" placeholder="Write a message..." autocomplete="off" required><button type="submit">Send</button></form>';
  const box=el('real-chat-messages');box.scrollTop=box.scrollHeight;
  el('send-message-form').onsubmit=async e=>{e.preventDefault();const body=el('message-body').value.trim();if(!body)return;const {error}=await sb.from('messages').insert({conversation_id:currentConversation,sender_id:currentUser.id,body});if(error){note(error.message);return;}el('message-body').value='';await loadMessages();};
+ el('voice-call').onclick=()=>startCall('audio');el('video-call').onclick=()=>startCall('video');
  el('block-current').onclick=()=>blockUser(other);
  el('report-user').onclick=async()=>{const reason=prompt('Why are you reporting this user?');if(!reason||reason.trim().length<3)return;const {error}=await sb.from('reports').insert({reporter_id:currentUser.id,reported_user_id:other,reason:reason.trim()});note(error?'Could not submit report.':'Report submitted.');};
  if(messageChannel)await sb.removeChannel(messageChannel);
@@ -317,6 +385,7 @@ async function loadMessages(){
 async function blockUser(id){const {error}=await sb.from('blocks').insert({blocker_id:currentUser.id,blocked_id:id});if(error){note(error.message);return;}note('User blocked.');currentConversation=null;await loadConversations();el('real-chat-main').innerHTML='<div class="chat-empty"><b>User blocked.</b><span>They can no longer message you.</span></div>';}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-open-group]');if(g){currentConversation=g.dataset.openGroup;currentGroupChat=true;loadConversations();loadGroupMessages();}const m=e.target.closest('[data-message-user]');if(m)openConversation(m.dataset.messageUser);const b=e.target.closest('[data-block-user]');if(b)blockUser(b.dataset.blockUser);const c=e.target.closest('[data-open-chat]');if(c){currentConversation=c.dataset.openChat;currentGroupChat=false;loadConversations();loadMessages();}});
 sb.auth.onAuthStateChange((_event)=>{refreshSession();});
+watchCalls();
 refreshSession();
 })();
 
