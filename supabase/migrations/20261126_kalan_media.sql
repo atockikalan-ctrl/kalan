@@ -21,6 +21,7 @@ create index if not exists media_items_user_created_idx
 
 create table if not exists public.media_shares (
   media_item_id uuid not null references public.media_items(id) on delete cascade,
+  owner_id uuid not null references auth.users(id) on delete cascade,
   user_id uuid not null references auth.users(id) on delete cascade,
   created_at timestamptz not null default now(),
   primary key (media_item_id, user_id)
@@ -62,18 +63,15 @@ drop policy if exists "Owners and recipients can view media shares" on public.me
 create policy "Owners and recipients can view media shares"
 on public.media_shares for select to authenticated
 using (
-  user_id = (select auth.uid())
-  or exists (
-    select 1 from public.media_items m
-    where m.id = media_item_id and m.user_id = (select auth.uid())
-  )
+  user_id = (select auth.uid()) or owner_id = (select auth.uid())
 );
 
 drop policy if exists "Owners can share media with accepted friends" on public.media_shares;
 create policy "Owners can share media with accepted friends"
 on public.media_shares for insert to authenticated
 with check (
-  exists (
+  owner_id = (select auth.uid())
+  and exists (
     select 1 from public.media_items m
     where m.id = media_item_id
       and m.user_id = (select auth.uid())
@@ -99,10 +97,7 @@ drop policy if exists "Owners can revoke media shares" on public.media_shares;
 create policy "Owners can revoke media shares"
 on public.media_shares for delete to authenticated
 using (
-  exists (
-    select 1 from public.media_items m
-    where m.id = media_item_id and m.user_id = (select auth.uid())
-  )
+  owner_id = (select auth.uid())
 );
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
