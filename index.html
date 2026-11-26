@@ -459,6 +459,9 @@ refreshSession();
      console.error('KALAN Community refresh failed',error);
    }
  }
+ // Publish auth handler before UI setup so a missing element cannot block login sync.
+ window.kalanRefreshCommunity=refresh;
+ window.kalanCommunityAuthState='Community auth handler registered';
  async function loadFriends(){
    const {data,error}=await db.from('friend_requests').select('id,sender_id,recipient_id,status,created_at').or('sender_id.eq.'+me.id+',recipient_id.eq.'+me.id).order('created_at',{ascending:false});
    if(error){const debug=$("community-debug");if(debug)debug.textContent="Community diagnostic: friend_requests query failed — "+error.message;$('community-requests').innerHTML='<div class="empty">Friend requests could not load: '+esc(error.message)+'</div>';$('friends-list').innerHTML='<div class="empty">Friend list could not load: '+esc(error.message)+'</div>';$('sent-requests').innerHTML='<div class="empty">Sent requests could not load: '+esc(error.message)+'</div>';toast('Could not load friends: '+error.message);return;} friendRows=data||[];
@@ -525,10 +528,8 @@ try{const [avatar_url,banner_url]=await Promise.all([uploadArt($('edit-avatar-fi
 if(patch.avatar_url||patch.banner_url){const {error:artError}=await db.from('profiles').update({...(patch.avatar_url?{avatar_url:patch.avatar_url}:{}),...(patch.banner_url?{banner_url:patch.banner_url}:{})}).eq('id',me.id);if(artError){toast('Artwork uploaded but profile save failed: '+artError.message);return;}}
 $('profile-modal').classList.remove('open');toast('Profile updated!');await refresh();};
  document.addEventListener('click',e=>{const a=e.target.closest('[data-add-friend]');if(a)addFriend(a.dataset.addFriend);const ok=e.target.closest('[data-accept-request]');if(ok)respond(ok.dataset.acceptRequest,'accepted');const no=e.target.closest('[data-decline-request]');if(no)respond(no.dataset.declineRequest,'declined');const cancel=e.target.closest('[data-cancel-request]');if(cancel)removeFriend(cancel.dataset.cancelRequest);const rm=e.target.closest('[data-remove-friend]');if(rm)removeFriend(rm.dataset.removeFriend);const vp=e.target.closest('[data-view-profile]');if(vp)viewProfile(vp.dataset.viewProfile);const ban=e.target.closest('[data-admin-ban]');if(ban){const reason=prompt('Why are you banning this player? (Optional)');if(reason!==null)adminAction('ban',ban.dataset.adminBan,reason);}const unban=e.target.closest('[data-admin-unban]');if(unban&&confirm('Unban this player?'))adminAction('unban',unban.dataset.adminUnban);});
- window.kalanRefreshCommunity=refresh;
- window.kalanCommunityAuthState='Waiting for primary account session';
- // The primary account controller is the sole auth-session authority.
- // It calls this function with its resolved user after every auth event.
+ // One-time fallback for initial page load; auth changes remain owned by the primary controller.
+ refresh();
 })();
 
 </script>
