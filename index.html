@@ -75,11 +75,48 @@ body{background:var(--bg);color:var(--text);font-size:14px}
 .toast{background:#fffdf8;border-color:#deded2;color:#30382f;box-shadow:0 8px 28px #30382f20}
 @media(max-width:720px){.sidebar{background:#eae9df;box-shadow:8px 0 30px #3335}.main{padding:0 15px}.hero{padding:23px;border-radius:17px}.hero h2{font-size:32px}.welcome h1,.page-head h1{font-size:29px}.grid{gap:12px}}
 
+
+/* Friend activity and profile presentation */
+.friend-dashboard{display:grid;grid-template-columns:.9fr 1.35fr;gap:16px;margin-top:24px}
+.friend-dashboard .panel{min-width:0}
+.friend-dashboard .panel-head{align-items:center}
+.friend-dashboard .panel-head h3{font:600 17px var(--display);margin:2px 0 0;color:#30382f}
+.online-person,.activity-item{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid #e8e3d9}
+.online-person:last-child,.activity-item:last-child{border-bottom:0}
+.online-person .who,.activity-item .who{flex:1;min-width:0}
+.online-person b,.activity-item b{display:block;font-size:12px;color:#354035}
+.online-person small,.activity-item small{display:block;color:#81877b;font-size:10px;margin-top:3px;line-height:1.45}
+.presence-dot{width:9px;height:9px;border-radius:50%;background:#79a77a;box-shadow:0 0 0 3px #79a77a20;flex:none}
+.activity-game-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:11px;background:#e8ede3;color:#587355;font-weight:800;flex:none}
+.friend-online-chip{display:inline-flex;align-items:center;gap:6px;color:#5c805c;font-size:9px;font-weight:700}
+.friend-card .friend-online-chip{margin-top:4px}
+.profile{box-shadow:0 8px 28px #343d2a0b}
+.profile-cover{height:178px;position:relative;overflow:hidden;background:linear-gradient(120deg,#dbe6d6,#c9d9cf 55%,#e9dfca)}
+.profile-cover:before,.profile-cover:after{content:"";position:absolute;border:1px solid #78917435;border-radius:50%;width:260px;height:260px;right:9%;top:-150px}
+.profile-cover:after{width:180px;height:180px;right:20%;top:-90px}
+.profile-body{padding:0 28px 26px;position:relative}
+.profile-body .avatar{width:88px;height:88px;border:6px solid #fffdf8;border-radius:25px;margin-top:-44px;font-size:30px;box-shadow:0 5px 15px #3e503b20}
+.profile-body h2{font-size:24px;letter-spacing:-.5px}
+.profile-body .profile-identity{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.profile-badge{display:inline-flex;align-items:center;gap:5px;background:#e8eee4;color:#597355;border-radius:20px;padding:6px 10px;font-size:10px;font-weight:700}
+.profile-stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.profile-stat{background:#f3f2eb;border:1px solid #e9e5db;border-radius:12px;padding:12px 16px;min-width:115px}
+.profile-stat b{display:block;font:700 19px var(--display);color:#354035}
+.profile-stat small{display:block;color:#81877b;font-size:9px;margin-top:3px}
+.profile-section-title{font:600 16px var(--display);color:#354035;margin:0 0 8px}
+.profile-extra{color:#657360;background:#f1f4ed;border-radius:10px;padding:9px 12px;display:inline-block}
+@media(max-width:900px){.friend-dashboard{grid-template-columns:1fr}}
+@media(max-width:720px){.profile-cover{height:140px}.profile-body{padding:0 18px 20px}.profile-stat{min-width:calc(50% - 5px);flex:1}}
+
 </style></head>
 <body><div class="shell">
 <aside class="sidebar" id="sidebar"><a class="brand" href="#"><span class="brand-mark">K</span>kalan<em>.</em></a><div class="side-label">MENU</div><nav class="nav"><button class="active" data-page="home"><span>⌂</span>Home</button><button data-page="minecraft-hub"><span>⛏</span>Minecraft</button><button data-page="discover"><span>⌕</span>Discover</button><button data-page="library"><span>▣</span>My library</button><button data-page="community"><span>◉</span>Community</button><button data-page="friends"><span>♧</span>Friends</button><button data-page="messages"><span>✉</span>Messages</button></nav><div class="side-label spacer">YOUR SPACE</div><nav class="nav"><button data-page="profile"><span>♙</span>My profile</button><button data-page="leaderboards"><span>♜</span>Leaderboards</button></nav><div class="sidebar-bottom"><div class="tip"><div style="color:#b7a5ff;margin-bottom:8px">✦ YOUR NEXT ADVENTURE</div><b>Find something new to play.</b><p>A whole universe is waiting.</p><button data-page="discover">Explore games →</button></div><div class="user-mini"><div class="avatar" id="side-avatar">K</div><div><b id="side-name">Kalan</b><small id="side-handle">@kalan</small></div></div></div></aside>
 <main class="main"><header class="topbar"><button class="mobile-menu" id="menu">☰</button><div class="crumb">KALAN <span style="color:#424b5e"> / </span> <b id="crumb">HOME</b></div><div class="actions"><input class="search" id="search" placeholder="Search games, players..."><button class="top-avatar" data-page="profile">K</button></div></header>
-<section class="page active" id="page-home"><div class="welcome"><div><div class="eyebrow"><i class="live"></i>YOUR GAMING UNIVERSE</div><h1>Find your next <span>favorite.</span></h1><p class="muted">Discover games, meet players, and make every session count.</p></div><button class="primary" data-page="discover">Explore games ↗</button></div><div class="hero"><div class="hero-copy"><span class="pill">FEATURED THIS WEEK</span><h2>Adventure<br>is calling.</h2><p>Fresh worlds. New challenges. Your next obsession is waiting.</p><button class="light" data-page="discover">Browse featured games →</button></div><div class="orbit"><div class="core">✦</div></div></div><div class="section"><div><div class="eyebrow">PICK YOUR NEXT PLAY</div><h2>Trending games</h2></div><button class="link" data-page="discover">View all →</button></div><div class="grid" id="trending"></div></section>
+<section class="page active" id="page-home"><div class="welcome"><div><div class="eyebrow"><i class="live"></i>YOUR GAMING UNIVERSE</div><h1>Find your next <span>favorite.</span></h1><p class="muted">Discover games, meet players, and make every session count.</p></div><button class="primary" data-page="discover">Explore games ↗</button></div><div class="hero"><div class="hero-copy"><span class="pill">FEATURED THIS WEEK</span><h2>Adventure<br>is calling.</h2><p>Fresh worlds. New challenges. Your next obsession is waiting.</p><button class="light" data-page="discover">Browse featured games →</button></div><div class="orbit"><div class="core">✦</div></div></div><div class="section"><div><div class="eyebrow">PICK YOUR NEXT PLAY</div><h2>Trending games</h2></div><button class="link" data-page="discover">View all →</button></div><div class="grid" id="trending"></div>
+<div class="friend-dashboard">
+ <div class="panel friend-live-panel"><div class="panel-head"><div><div class="eyebrow">HANGING OUT</div><h3>Friends online</h3></div><span class="muted" id="online-count">Live status</span></div><div id="friend-online-list"><div class="empty">Sign in to see which friends are around.</div></div></div>
+ <div class="panel friend-activity-panel"><div class="panel-head"><div><div class="eyebrow">WHAT YOUR PEOPLE ARE PLAYING</div><h3>Friend activity</h3></div><button class="link" data-page="friends">Your friends →</button></div><div id="friend-activity-feed"><div class="empty">Your friends' recent games will show up here.</div></div></div>
+</div></section>
 <section class="page" id="page-discover"><div class="page-head"><div class="eyebrow">THE GAMEVERSE</div><h1>Discover games<span>.</span></h1><p class="muted">A whole universe of games. Where will you go?</p></div><div class="filters" id="filters"><button class="filter active" data-filter="All">All games</button><button class="filter" data-filter="Adventure">Adventure</button><button class="filter" data-filter="Action">Action</button><button class="filter" data-filter="Puzzle">Puzzle</button><button class="filter" data-filter="Arcade">Arcade</button></div><div class="grid" id="discover-grid"></div></section>
 <section class="page" id="page-minecraft-hub">
 <div class="page-head"><div class="eyebrow">KALANGAMER GAME HUB</div><h1>Minecraft <span>Versions.</span></h1><p class="muted">Choose a version and jump straight into the blocky world. More versions will be added here.</p></div>
@@ -305,4 +342,77 @@ refreshSession();
  db.auth.onAuthStateChange(()=>{setTimeout(refresh,0);});refresh();
 })();
 
-</script></body></html>
+</script>
+<script>
+(() => {
+ const db=window.supabase.createClient('https://oylzvrngrjfbsawmtjll.supabase.co','sb_publishable_bPRkvpp5H8Imv2xvf34yaw_t9nbQAZO');
+ const $=id=>document.getElementById(id);
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const note=s=>{const t=$('toast');if(!t)return;t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)};
+ let user=null, profile=null, presence=null, online=new Map(), friendIds=new Set(), activityChannel=null, friendProfiles={};
+ const titleFromCard=el=>el.closest('.game')?.querySelector('.game-info h3')?.textContent?.trim()||el.dataset.view;
+ const renderOnline=()=>{
+   const rows=[...online.values()].filter(p=>p.user_id!==user?.id&&friendIds.has(p.user_id));
+   $('online-count').textContent=rows.length+' online';
+   $('friend-online-list').innerHTML=rows.length?rows.map(p=>'<div class="online-person"><div class="avatar">'+esc((p.display_name||p.username||'?')[0].toUpperCase())+'</div><div class="who"><b>'+esc(p.display_name||p.username||'Player')+'</b><small>@'+esc(p.username||'player')+' · '+esc(p.playing?'Playing '+p.playing:'Around KALANGAMER')+'</small></div><span class="presence-dot"></span></div>').join(''):'<div class="empty">No friends online right now. Your friends will appear here when they visit KALANGAMER.</div>';
+ };
+ const loadFriends=async()=>{
+   if(!user)return;
+   const {data,error}=await db.from('friend_requests').select('sender_id,recipient_id').eq('status','accepted').or('sender_id.eq.'+user.id+',recipient_id.eq.'+user.id);
+   if(error){console.warn('Friend list unavailable',error);return;}
+   friendIds=new Set((data||[]).map(r=>r.sender_id===user.id?r.recipient_id:r.sender_id));
+   const ids=[...friendIds];
+   if(ids.length){const {data:ps}=await db.from('profiles').select('id,username,display_name').in('id',ids);friendProfiles=Object.fromEntries((ps||[]).map(p=>[p.id,p]));}
+   renderOnline();
+ };
+ const loadActivity=async()=>{
+   if(!user)return;
+   const {data,error}=await db.from('player_activity').select('id,user_id,game_key,game_title,created_at').order('created_at',{ascending:false}).limit(30);
+   if(error){$('friend-activity-feed').innerHTML='<div class="empty">Friend activity is temporarily unavailable.</div>';console.warn(error);return;}
+   const rows=(data||[]).filter(x=>friendIds.has(x.user_id)).slice(0,12);
+   const ids=[...new Set(rows.map(x=>x.user_id))];
+   let names=friendProfiles;
+   if(ids.length){const {data:ps}=await db.from('profiles').select('id,username,display_name').in('id',ids);names={...names,...Object.fromEntries((ps||[]).map(p=>[p.id,p]))};}
+   $('friend-activity-feed').innerHTML=rows.length?rows.map(a=>{const p=names[a.user_id]||{};const when=new Date(a.created_at);return '<div class="activity-item"><div class="activity-game-icon">▶</div><div class="who"><b>'+esc(p.display_name||p.username||'A friend')+' played '+esc(a.game_title)+'</b><small>'+when.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+'</small></div><span class="friend-online-chip">GAME</span></div>';}).join(''):'<div class="empty">No recent game activity yet. When friends launch games, their activity will appear here.</div>';
+ };
+ const startPresence=async()=>{
+   if(presence)await db.removeChannel(presence);
+   presence=db.channel('kalan:online-players',{config:{presence:{key:user.id}}});
+   presence.on('presence',{event:'sync'},()=>{online.clear();const state=presence.presenceState();Object.values(state).flat().forEach(p=>{if(p?.user_id)online.set(p.user_id,p)});renderOnline();});
+   presence.subscribe(async status=>{
+     if(status!=='SUBSCRIBED')return;
+     await presence.track({user_id:user.id,username:profile?.username||'player',display_name:profile?.display_name||profile?.username||'Player',playing:document.querySelector('.page.active .game-player h2')?.textContent||null,online_at:new Date().toISOString()});
+   });
+ };
+ const stopPresence=async()=>{if(presence){await presence.untrack();await db.removeChannel(presence);presence=null;}online.clear();renderOnline();};
+ const refresh=async()=>{
+   const {data:{session}}=await db.auth.getSession();user=session?.user||null;
+   if(!user){profile=null;friendIds.clear();online.clear();$('online-count').textContent='Live status';$('friend-online-list').innerHTML='<div class="empty">Sign in to see which friends are around.</div>';$('friend-activity-feed').innerHTML='<div class="empty">Sign in to see your friends’ recent games.</div>';await stopPresence();return;}
+   const {data:p}=await db.from('profiles').select('id,username,display_name').eq('id',user.id).maybeSingle();profile=p||{username:'player'};
+   await loadFriends();await loadActivity();await startPresence();
+   if(activityChannel)await db.removeChannel(activityChannel);
+   activityChannel=db.channel('kalan:friend-activity:'+user.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'player_activity'},payload=>{if(friendIds.has(payload.new.user_id))loadActivity();}).subscribe();
+ };
+ document.addEventListener('click',async e=>{
+   const play=e.target.closest('[data-view]');
+   if(play&&play.closest('.game')){
+     if(!user)return;
+     const game_key=String(play.dataset.view||'').slice(0,80),game_title=titleFromCard(play).slice(0,100);
+     const lastKey='kalan:last-play:'+game_key,last=Number(localStorage.getItem(lastKey)||0);
+     if(Date.now()-last<60000)return;
+     localStorage.setItem(lastKey,String(Date.now()));
+     const {error}=await db.from('player_activity').insert({user_id:user.id,game_key,game_title});
+     if(error)console.warn('Could not record game activity',error);
+     if(presence)await presence.track({user_id:user.id,username:profile?.username||'player',display_name:profile?.display_name||profile?.username||'Player',playing:game_title,online_at:new Date().toISOString()});
+   }
+ });
+ document.addEventListener('visibilitychange',async()=>{
+   if(!presence||!user)return;
+   if(document.hidden)await presence.untrack();
+   else await presence.track({user_id:user.id,username:profile?.username||'player',display_name:profile?.display_name||profile?.username||'Player',playing:document.querySelector('.page.active .game-player h2')?.textContent||null,online_at:new Date().toISOString()});
+ });
+ db.auth.onAuthStateChange(()=>setTimeout(refresh,0));
+ refresh();
+})();
+</script>
+</body></html>
