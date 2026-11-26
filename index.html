@@ -364,13 +364,14 @@ async function createGroupChat(){
 function attachChatRealtime(channelName,table,id,inputId,indicatorId,refresh){
  if(messageChannel)sb.removeChannel(messageChannel);
  let typingTimer=null;
+ const defaultLabel=el(indicatorId)?.textContent||(table==='group_messages'?'Group chat':'Private conversation');
  const channel=sb.channel(channelName,{config:{presence:{key:currentUser.id}}})
   .on('postgres_changes',{event:'INSERT',schema:'public',table,filter:'conversation_id=eq.'+id},payload=>{if(payload.new.sender_id!==currentUser.id)refresh();})
   .on('presence',{event:'sync'},()=>{
    const state=channel.presenceState();
    const someoneTyping=Object.values(state).flat().some(meta=>meta.user_id!==currentUser.id&&meta.typing);
    const indicator=el(indicatorId);
-   if(indicator)indicator.textContent=someoneTyping?'Someone is typing…':(table==='group_messages'?'Group conversation':'Private conversation');
+   if(indicator)indicator.textContent=someoneTyping?'Someone is typing…':defaultLabel;
   })
   .subscribe(async status=>{if(status==='SUBSCRIBED')await channel.track({user_id:currentUser.id,typing:false});});
  messageChannel=channel;
