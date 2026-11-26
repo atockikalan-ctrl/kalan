@@ -5,8 +5,9 @@ const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch{return {}}};
 const save=s=>localStorage.setItem(KEY,JSON.stringify(s));
-const today=()=>new Date().toLocaleDateString('en-CA');
-const week=()=>{const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));return d.toLocaleDateString('en-CA')};
+const dateKey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>dateKey(new Date());
+const week=()=>{const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));return dateKey(d)};
 let stats=read(),lastTick=Date.now(),activeTitle='',activeSince=0;
 stats.playtime=stats.playtime||{};stats.sessions=Array.isArray(stats.sessions)?stats.sessions:[];stats.launches=Array.isArray(stats.launches)?stats.launches:[];
 function uniqueGames(){return (typeof games!=='undefined'?games:[]).filter((g,i,a)=>g[0]&&a.findIndex(x=>x[0]===g[0])===i);}
