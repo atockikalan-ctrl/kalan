@@ -368,7 +368,7 @@ refreshSession();
  };
  const loadActivity=async()=>{
    if(!user)return;
-   const {data,error}=await db.from('player_activity').select('id,user_id,game_key,game_title,created_at').order('created_at',{ascending:false}).limit(30);
+   if(!friendIds.size){$('friend-activity-feed').innerHTML='<div class="empty">Add friends to see what they have been playing.</div>';return;}\n   const {data,error}=await db.from('player_activity').select('id,user_id,game_key,game_title,created_at').in('user_id',[...friendIds]).order('created_at',{ascending:false}).limit(30);
    if(error){$('friend-activity-feed').innerHTML='<div class="empty">Friend activity is temporarily unavailable.</div>';console.warn(error);return;}
    const rows=(data||[]).filter(x=>friendIds.has(x.user_id)).slice(0,12);
    const ids=[...new Set(rows.map(x=>x.user_id))];
@@ -423,9 +423,9 @@ refreshSession();
  async function loadOwnActivity(){
   const {data:{session}}=await db.auth.getSession();const user=session?.user;
   if(!user){document.getElementById('profile-recent-activity').innerHTML='<div class="empty">Sign in to build your player history.</div>';document.getElementById('profile-games-played').textContent='0';return;}
-  const {data,error}=await db.from('player_activity').select('id,game_title,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(8);
+  const [{data,error},{count}] = await Promise.all([db.from('player_activity').select('id,game_title,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(8),db.from('player_activity').select('id',{count:'exact',head:true}).eq('user_id',user.id)]);
   if(error){document.getElementById('profile-recent-activity').innerHTML='<div class="empty">Your recent games are temporarily unavailable.</div>';return;}
-  document.getElementById('profile-games-played').textContent=(data||[]).length;
+  document.getElementById('profile-games-played').textContent=count??(data||[]).length;
   document.getElementById('profile-recent-activity').innerHTML=data?.length?data.map(a=>'<div class="activity-item"><div class="activity-game-icon">▶</div><div class="who"><b>'+esc(a.game_title)+'</b><small>Played '+new Date(a.created_at).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+'</small></div></div>').join(''):'<div class="empty">Play a game from KALANGAMER and it will appear here.</div>';
  }
  document.querySelectorAll('[data-page="profile"]').forEach(b=>b.addEventListener('click',loadOwnActivity));
