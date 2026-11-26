@@ -6,7 +6,7 @@ const toast=s=>{const t=$('toast');if(t){t.textContent=s;t.classList.add('show')
 const empty=s=>'<div class="empty">'+esc(s)+'</div>';
 const games=[['undertale','Undertale'],['deltarune','Deltarune'],['minecraft','Minecraft'],['ultra','ULTRAKILL'],['hollow-knight','Hollow Knight'],['among-us','Among Us'],['fnaf',"Five Nights at Freddy's"],['retro-bowl','Retro Bowl'],['salty-seas','Salty Seas'],['other','Something else']];
 const gameSelect=id=>'<select id="'+id+'" required>'+games.map(g=>'<option value="'+g[0]+'">'+g[1]+'</option>').join('')+'</select>';
-let me=null, friends=[], noticeChannel=null;
+let me=null, friends=[], noticeChannel=null, feedChannel=null, eventChannel=null;
 const levelMin=l=>100*(l-1)*l/2,levelMax=l=>100*l*(l+1)/2;
 async function identity(){
  const {data:{session}}=await db.auth.getSession();me=session?.user||null;
@@ -20,6 +20,10 @@ async function identity(){
  await Promise.all([progress(),feed(),notices(),parties(),nights(),groups()]);
  if(noticeChannel)db.removeChannel(noticeChannel);
  noticeChannel=db.channel('kalan-notices-'+me.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+me.id},notices).subscribe();
+ if(feedChannel)db.removeChannel(feedChannel);
+ feedChannel=db.channel('kalan-feed:'+me.id).on('postgres_changes',{event:'*',schema:'public',table:'feed_posts'},feed).on('postgres_changes',{event:'*',schema:'public',table:'post_likes'},feed).subscribe();
+ if(eventChannel)db.removeChannel(eventChannel);
+ eventChannel=db.channel('kalan-events:'+me.id).on('postgres_changes',{event:'*',schema:'public',table:'parties'},parties).on('postgres_changes',{event:'*',schema:'public',table:'party_members'},parties).on('postgres_changes',{event:'*',schema:'public',table:'game_nights'},nights).on('postgres_changes',{event:'*',schema:'public',table:'game_night_rsvps'},nights).subscribe();
 }
 async function progress(){
  const [{data:p},{data:a}]=await Promise.all([
@@ -121,5 +125,6 @@ if(profileForm&&!$('edit-theme')){const label=document.createElement('label');la
 $('edit-player-profile')?.addEventListener('click',async()=>{if(!me)return;const {data}=await db.from('profiles').select('profile_theme').eq('id',me.id).maybeSingle();if($('edit-theme'))$('edit-theme').value=data?.profile_theme||'sage';});
 profileForm?.addEventListener('submit',async()=>{if(!me)return;const theme=$('edit-theme')?.value||'sage';const {error}=await db.from('profiles').update({profile_theme:theme}).eq('id',me.id);if(!error)document.body.dataset.kalanTheme=theme;});
 document.querySelectorAll('[data-page="feed"],[data-page="parties"],[data-page="game-nights"],[data-page="player-finder"],[data-page="notifications"]').forEach(b=>b.addEventListener('click',()=>{if(!me)return;if(b.dataset.page==='feed')feed();if(b.dataset.page==='parties')parties();if(b.dataset.page==='game-nights')nights();if(b.dataset.page==='notifications')notices();}));
+document.addEventListener('click',e=>{if(e.target.closest('[data-view]')&&e.target.closest('.game'))setTimeout(progress,1800);});
 db.auth.onAuthStateChange(()=>setTimeout(identity,0));identity();
 })();
