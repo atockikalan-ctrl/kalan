@@ -601,7 +601,8 @@ $('profile-modal').classList.remove('open');toast('Profile updated!');await refr
  };
  const loadActivity=async()=>{
    if(!user)return;
-   if(!friendIds.size){$('friend-activity-feed').innerHTML='<div class="empty">Add friends to see what they have been playing.</div>';return;}\n   const {data,error}=await db.from('player_activity').select('id,user_id,game_key,game_title,created_at').in('user_id',[...friendIds]).order('created_at',{ascending:false}).limit(30);
+   if(!friendIds.size){$('friend-activity-feed').innerHTML='<div class="empty">Add friends to see what they have been playing.</div>';return;}
+   const {data,error}=await db.from('player_activity').select('id,user_id,game_key,game_title,created_at').in('user_id',[...friendIds]).order('created_at',{ascending:false}).limit(30);
    if(error){$('friend-activity-feed').innerHTML='<div class="empty">Friend activity is temporarily unavailable.</div>';console.warn(error);return;}
    const rows=(data||[]).filter(x=>friendIds.has(x.user_id)).slice(0,12);
    const ids=[...new Set(rows.map(x=>x.user_id))];
