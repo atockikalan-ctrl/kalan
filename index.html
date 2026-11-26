@@ -254,7 +254,9 @@ async function openConversation(otherId){
 async function loadConversations(){
  const {data,error}=await sb.from('conversations').select('id,participant_one,participant_two,created_at').order('created_at',{ascending:false});
  if(error){el('real-conversations').innerHTML='<div class="empty">Could not load conversations.</div>';return;}
- const {data:groups}=await sb.from('group_conversations').select('id,name,created_at').order('created_at',{ascending:false});\n const all=[...(data||[]).map(c=>({...c,kind:'direct'})),...(groups||[]).map(c=>({...c,kind:'group'}))].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));\n if(!all.length){el('real-conversations').innerHTML='<div class="empty">No conversations yet. Find someone in Community or create a group.</div>';return;}
+ const {data:groups}=await sb.from('group_conversations').select('id,name,created_at').order('created_at',{ascending:false});
+ const all=[...(data||[]).map(c=>({...c,kind:'direct'})),...(groups||[]).map(c=>({...c,kind:'group'}))].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+ if(!all.length){el('real-conversations').innerHTML='<div class="empty">No conversations yet. Find someone in Community or create a group.</div>';return;}
  const ids=[...new Set(data.map(c=>c.participant_one===currentUser.id?c.participant_two:c.participant_one))];
  const {data:profiles}=await sb.from('profiles').select('id,username').in('id',ids);
  const names=Object.fromEntries((profiles||[]).map(p=>[p.id,p.username]));
