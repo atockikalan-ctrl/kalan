@@ -360,6 +360,29 @@ async function createGroupChat(){
  if(memberErr){note('Group created, but adding members failed: '+memberErr.message);return;}
  currentConversation=group.id;currentGroupChat=true;await loadConversations();await loadGroupMessages();
 }
+
+function attachChatRealtime(channelName,table,id,inputId,indicatorId,refresh){
+ if(messageChannel)sb.removeChannel(messageChannel);
+ let typingTimer=null;
+ const channel=sb.channel(channelName,{config:{presence:{key:currentUser.id}}})
+  .on('postgres_changes',{event:'INSERT',schema:'public',table,filter:'conversation_id=eq.'+id},payload=>{if(payload.new.sender_id!==currentUser.id)refresh();})
+  .on('presence',{event:'sync'},()=>{
+   const state=channel.presenceState();
+   const someoneTyping=Object.values(state).flat().some(meta=>meta.user_id!==currentUser.id&&meta.typing);
+   const indicator=el(indicatorId);
+   if(indicator)indicator.textContent=someoneTyping?'Someone is typing…':(table==='group_messages'?'Group conversation':'Private conversation');
+  })
+  .subscribe(async status=>{if(status==='SUBSCRIBED')await channel.track({user_id:currentUser.id,typing:false});});
+ messageChannel=channel;
+ const input=el(inputId);
+ if(input)input.oninput=()=>{
+  const typing=!!input.value.trim();
+  channel.track({user_id:currentUser.id,typing});
+  clearTimeout(typingTimer);
+  if(typing)typingTimer=setTimeout(()=>channel.track({user_id:currentUser.id,typing:false}),1800);
+ };
+}
+
 async function loadGroupMessages(){
  const id=currentConversation;
  const {data:members,error:memberErr}=await sb.from('group_conversation_members').select('user_id').eq('conversation_id',id);
@@ -370,12 +393,11 @@ async function loadGroupMessages(){
  const {data:group}=await sb.from('group_conversations').select('name,created_by').eq('id',id).single();
  const {data,error}=await sb.from('group_messages').select('id,sender_id,body,created_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(200);
  if(error){note(error.message);return;}
- el('real-chat-main').innerHTML='<div class="chat-header"><button type="button" class="chat-mobile-back" data-chat-back>← Chats</button><div class="avatar">👥</div><div><b>'+safe(group?.name||'Group chat')+'</b><small>'+ids.length+' members</small></div><div class="chat-tools"><button type="button" class="chat-mobile-details" data-chat-details-toggle>Details</button><button id="group-add-member">＋ Add friend</button></div></div><div class="chat-messages" id="real-chat-messages">'+(data||[]).map(m=>'<div class="bubble '+(m.sender_id===currentUser.id?'mine':'')+'">'+(m.sender_id===currentUser.id?'': '<b>'+safe(names[m.sender_id]||'Player')+'</b><br>')+safe(m.body)+'<div class="chat-message-meta">'+new Date(m.created_at).toLocaleString()+'</div></div>').join('')+'</div><form class="chat-compose" id="send-group-message-form"><input id="group-message-body" maxlength="2000" placeholder="Message the group..." autocomplete="off" required><button type="submit">Send</button></form>';
+ el('real-chat-main').innerHTML='<div class="chat-header"><button type="button" class="chat-mobile-back" data-chat-back>← Chats</button><div class="avatar">👥</div><div><b>'+safe(group?.name||'Group chat')+'</b><small id="group-typing-indicator">'+ids.length+' members</small></div><div class="chat-tools"><button type="button" class="chat-mobile-details" data-chat-details-toggle>Details</button><button id="group-add-member">＋ Add friend</button></div></div><div class="chat-messages" id="real-chat-messages">'+(data||[]).map(m=>'<div class="bubble '+(m.sender_id===currentUser.id?'mine':'')+'">'+(m.sender_id===currentUser.id?'': '<b>'+safe(names[m.sender_id]||'Player')+'</b><br>')+safe(m.body)+'<div class="chat-message-meta">'+new Date(m.created_at).toLocaleString()+'</div></div>').join('')+'</div><form class="chat-compose" id="send-group-message-form"><input id="group-message-body" maxlength="2000" placeholder="Message the group..." autocomplete="off" required><button type="submit">Send</button></form>';
  const box=el('real-chat-messages');box.scrollTop=box.scrollHeight;
  el('send-group-message-form').onsubmit=async e=>{e.preventDefault();const body=el('group-message-body').value.trim();if(!body)return;const {error}=await sb.from('group_messages').insert({conversation_id:id,sender_id:currentUser.id,body});if(error){note(error.message);return;}el('group-message-body').value='';await loadGroupMessages();};
  el('group-add-member').onclick=async()=>{if(group?.created_by!==currentUser.id){note('Only the group creator can add members right now.');return;}const username=(prompt('Friend username to add:')||'').trim().replace(/^@/,'');if(!username)return;const {data:p}=await sb.from('profiles').select('id,username').eq('username',username).maybeSingle();if(!p){note('Player not found.');return;}const {data:fr}=await sb.from('friend_requests').select('id').eq('status','accepted').or('sender_id.eq.'+currentUser.id+',recipient_id.eq.'+currentUser.id);if(!(fr||[]).some(x=>true)){note('Add friends before inviting them.');return;}const {data:edge}=await sb.from('friend_requests').select('sender_id,recipient_id').eq('status','accepted').or('sender_id.eq.'+currentUser.id+',recipient_id.eq.'+currentUser.id);if(!(edge||[]).some(x=>(x.sender_id===currentUser.id?x.recipient_id:x.sender_id)===p.id)){note('You can only add friends.');return;}const {error}=await sb.from('group_conversation_members').insert({conversation_id:id,user_id:p.id,added_by:currentUser.id});note(error?(error.code==='23505'?'They are already in this group.':error.message):'Friend added!');await loadGroupMessages();};
- if(messageChannel)await sb.removeChannel(messageChannel);
- messageChannel=sb.channel('kalan-group-chat-'+id).on('postgres_changes',{event:'INSERT',schema:'public',table:'group_messages',filter:'conversation_id=eq.'+id},payload=>{if(payload.new.sender_id!==currentUser.id)loadGroupMessages();}).subscribe();
+ attachChatRealtime('kalan-group-chat-'+id,'group_messages',id,'group-message-body','group-typing-indicator',loadGroupMessages);
 }
 el('create-group-chat').onclick=createGroupChat;
 
@@ -451,14 +473,13 @@ async function loadMessages(){
  const {data:person}=await sb.from('profiles').select('username').eq('id',other).single();
  const {data,error}=await sb.from('messages').select('id,sender_id,body,created_at').eq('conversation_id',currentConversation).order('created_at',{ascending:true}).limit(200);
  if(error){note(error.message);return;}
- el('real-chat-main').innerHTML='<div class="chat-header"><button type="button" class="chat-mobile-back" data-chat-back>← Chats</button><div class="avatar">'+safe((person?.username||'?')[0].toUpperCase())+'</div><div><b>'+safe(person?.username||'KALAN player')+'</b><small>Private conversation</small></div><div class="chat-tools"><button type="button" class="chat-mobile-details" data-chat-details-toggle>Details</button><button id="voice-call">☎ Voice</button><button id="video-call">▣ Video</button><button id="report-user">Report</button><button id="block-current">Block</button></div></div><div class="chat-messages" id="real-chat-messages">'+data.map(m=>'<div class="bubble '+(m.sender_id===currentUser.id?'mine':'')+'">'+safe(m.body)+'<div class="chat-message-meta">'+new Date(m.created_at).toLocaleString()+'</div></div>').join('')+'</div><form class="chat-compose" id="send-message-form"><input id="message-body" maxlength="2000" placeholder="Write a message..." autocomplete="off" required><button type="submit">Send</button></form>';
+ el('real-chat-main').innerHTML='<div class="chat-header"><button type="button" class="chat-mobile-back" data-chat-back>← Chats</button><div class="avatar">'+safe((person?.username||'?')[0].toUpperCase())+'</div><div><b>'+safe(person?.username||'KALAN player')+'</b><small id="direct-typing-indicator">Private conversation</small></div><div class="chat-tools"><button type="button" class="chat-mobile-details" data-chat-details-toggle>Details</button><button id="voice-call">☎ Voice</button><button id="video-call">▣ Video</button><button id="report-user">Report</button><button id="block-current">Block</button></div></div><div class="chat-messages" id="real-chat-messages">'+data.map(m=>'<div class="bubble '+(m.sender_id===currentUser.id?'mine':'')+'">'+safe(m.body)+'<div class="chat-message-meta">'+new Date(m.created_at).toLocaleString()+'</div></div>').join('')+'</div><form class="chat-compose" id="send-message-form"><input id="message-body" maxlength="2000" placeholder="Write a message..." autocomplete="off" required><button type="submit">Send</button></form>';
  const box=el('real-chat-messages');box.scrollTop=box.scrollHeight;
  el('send-message-form').onsubmit=async e=>{e.preventDefault();const body=el('message-body').value.trim();if(!body)return;const {error}=await sb.from('messages').insert({conversation_id:currentConversation,sender_id:currentUser.id,body});if(error){note(error.message);return;}el('message-body').value='';await loadMessages();};
  el('voice-call').onclick=()=>startCall('audio');el('video-call').onclick=()=>startCall('video');
  el('block-current').onclick=()=>blockUser(other);
  el('report-user').onclick=async()=>{const reason=prompt('Why are you reporting this user?');if(!reason||reason.trim().length<3)return;const {error}=await sb.from('reports').insert({reporter_id:currentUser.id,reported_user_id:other,reason:reason.trim()});note(error?'Could not submit report.':'Report submitted.');};
- if(messageChannel)await sb.removeChannel(messageChannel);
- messageChannel=sb.channel('kalan-chat-'+currentConversation).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'conversation_id=eq.'+currentConversation},payload=>{if(payload.new.sender_id!==currentUser.id)loadMessages();}).subscribe();
+ attachChatRealtime('kalan-chat-'+currentConversation,'messages',currentConversation,'message-body','direct-typing-indicator',loadMessages);
 }
 async function blockUser(id){const {error}=await sb.from('blocks').insert({blocker_id:currentUser.id,blocked_id:id});if(error){note(error.message);return;}note('User blocked.');currentConversation=null;await loadConversations();el('real-chat-main').innerHTML='<div class="chat-empty"><b>User blocked.</b><span>They can no longer message you.</span></div>';}
 document.addEventListener('click',e=>{
