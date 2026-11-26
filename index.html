@@ -320,7 +320,7 @@ el('forgot-password').onclick=async()=>{const email=el('login-email').value.trim
 el('signout').onclick=async()=>{await sb.auth.signOut();currentConversation=null;note('Signed out.');await refreshSession();};
 async function searchMembers(){
  if(!currentUser){note('Sign in first.');return;}const q=el('member-search').value.trim();if(q.length<3){note('Enter at least 3 characters.');return;}
- const {data,error}=await sb.from('profiles').select('id,username').ilike('username',q.neq('id',currentUser.id).limit(20);
+ const {data,error}=await sb.from('profiles').select('id,username').ilike('username',q.replace(/[%_]/g,'')+'%').neq('id',currentUser.id).limit(20);
  if(error){note(error.message);return;}el('member-results').innerHTML=data.length?data.map(p=>'<div class="member-row"><div class="avatar">'+safe(p.username[0].toUpperCase())+'</div><div class="who"><b>'+safe(p.username)+'</b><small>@'+safe(p.username)+'</small></div><button data-message-user="'+p.id+'">Message</button><button data-block-user="'+p.id+'">Block</button></div>').join(''):'<div class="empty">No matching players found.</div>';
 }
 el('search-members').onclick=searchMembers;el('member-search').onkeydown=e=>{if(e.key==='Enter')searchMembers();};
