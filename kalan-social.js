@@ -10,7 +10,7 @@ let me=null, friends=[], noticeChannel=null, feedChannel=null, eventChannel=null
 const levelMin=l=>100*(l-1)*l/2,levelMax=l=>100*l*(l+1)/2;
 async function identity(){
  const {data:{session}}=await db.auth.getSession();me=session?.user||null;
- if(!me){['feed-posts','party-list','game-night-list','notification-list','friend-groups-list'].forEach(id=>{if($(id))$(id).innerHTML=empty('Sign in to use this part of KALAN.')});return;}
+ if(!me){if(noticeChannel){db.removeChannel(noticeChannel);noticeChannel=null;}if(feedChannel){db.removeChannel(feedChannel);feedChannel=null;}if(eventChannel){db.removeChannel(eventChannel);eventChannel=null;}['feed-posts','party-list','game-night-list','notification-list','friend-groups-list'].forEach(id=>{if($(id))$(id).innerHTML=empty('Sign in to use this part of KALAN.')});return;}
  const [{data:p},{data:f}]=await Promise.all([
   db.from('profiles').select('id,username,display_name,profile_theme').eq('id',me.id).maybeSingle(),
   db.from('friend_requests').select('sender_id,recipient_id').eq('status','accepted').or('sender_id.eq.'+me.id+',recipient_id.eq.'+me.id)
@@ -26,6 +26,7 @@ async function identity(){
  eventChannel=db.channel('kalan-events:'+me.id).on('postgres_changes',{event:'*',schema:'public',table:'parties'},parties).on('postgres_changes',{event:'*',schema:'public',table:'party_members'},parties).on('postgres_changes',{event:'*',schema:'public',table:'game_nights'},nights).on('postgres_changes',{event:'*',schema:'public',table:'game_night_rsvps'},nights).subscribe();
 }
 async function progress(){
+ if(!me)return;
  const [{data:p},{data:a},{count:rep}]=await Promise.all([
   db.from('player_progress').select('xp,level').eq('user_id',me.id).maybeSingle(),
   db.from('user_achievements').select('achievement_id,unlocked_at,achievements(name,description,icon)').eq('user_id',me.id).order('unlocked_at',{ascending:false}),
