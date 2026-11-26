@@ -229,6 +229,7 @@ function authMode(mode){el('signup-form').hidden=mode!=='signup';el('login-form'
 el('show-signup').onclick=()=>authMode('signup'); el('show-login').onclick=()=>authMode('login');
 async function refreshSession(){
  const {data:{session}}=await sb.auth.getSession(); currentUser=session?.user||null;
+  if(typeof window.kalanRefreshCommunity==='function') await window.kalanRefreshCommunity(currentUser);
  if(currentUser&&typeof watchCalls==='function')watchCalls();
  el('auth-forms').hidden=!!currentUser;el('signed-in-panel').hidden=!currentUser;
  el('account-status').textContent=currentUser?'Signed in':'Not signed in';
@@ -400,8 +401,8 @@ refreshSession();
  let me=null, myProfile=null, friendRows=[], searchRows=[], isAdmin=false;
  const initials = s => esc((s||'?').trim().slice(0,1).toUpperCase());
  const profileRow = p => '<div class="friend-card"><div class="avatar">'+initials(p.display_name||p.username)+'</div><div class="who"><b>'+esc(p.display_name||p.username)+'</b><small>@'+esc(p.username)+'</small></div><button class="friend-action" data-view-profile="'+p.id+'">Profile</button><button class="friend-action" data-message-user="'+p.id+'">Message</button></div>';
- async function refresh(){
-   const {data:{session}}=await db.auth.getSession(); me=session?.user||null;
+ async function refresh(sessionUser){
+   if(arguments.length){me=sessionUser||null;}else{const {data:{session}}=await db.auth.getSession();me=session?.user||null;}
    isAdmin=false;$('admin-panel').style.display='none';
    if(!me){myProfile=null;friendRows=[];$('community-requests').innerHTML='<div class="empty">Sign in to see friend requests.</div>';$('friends-list').innerHTML='<div class="empty">Sign in to see your friends.</div>';$('sent-requests').innerHTML='<div class="empty">Sign in to see sent requests.</div>';$('friends-count').textContent='0 friends';$('profile-friends-preview').innerHTML='<div class="empty">Sign in to see your friends.</div>';return;}
    const {data:p,error}=await db.from('profiles').select('id,username,display_name,bio,favorite_game,status_message,avatar_url,banner_url').eq('id',me.id).single();
@@ -475,7 +476,8 @@ try{const [avatar_url,banner_url]=await Promise.all([uploadArt($('edit-avatar-fi
 if(patch.avatar_url||patch.banner_url){const {error:artError}=await db.from('profiles').update({...(patch.avatar_url?{avatar_url:patch.avatar_url}:{}),...(patch.banner_url?{banner_url:patch.banner_url}:{})}).eq('id',me.id);if(artError){toast('Artwork uploaded but profile save failed: '+artError.message);return;}}
 $('profile-modal').classList.remove('open');toast('Profile updated!');await refresh();};
  document.addEventListener('click',e=>{const a=e.target.closest('[data-add-friend]');if(a)addFriend(a.dataset.addFriend);const ok=e.target.closest('[data-accept-request]');if(ok)respond(ok.dataset.acceptRequest,'accepted');const no=e.target.closest('[data-decline-request]');if(no)respond(no.dataset.declineRequest,'declined');const cancel=e.target.closest('[data-cancel-request]');if(cancel)removeFriend(cancel.dataset.cancelRequest);const rm=e.target.closest('[data-remove-friend]');if(rm)removeFriend(rm.dataset.removeFriend);const vp=e.target.closest('[data-view-profile]');if(vp)viewProfile(vp.dataset.viewProfile);const ban=e.target.closest('[data-admin-ban]');if(ban){const reason=prompt('Why are you banning this player? (Optional)');if(reason!==null)adminAction('ban',ban.dataset.adminBan,reason);}const unban=e.target.closest('[data-admin-unban]');if(unban&&confirm('Unban this player?'))adminAction('unban',unban.dataset.adminUnban);});
- db.auth.onAuthStateChange(()=>{setTimeout(refresh,0);});refresh();
+ window.kalanRefreshCommunity=refresh;
+  db.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>refresh(session?.user||null),0);});refresh();
 })();
 
 </script>
