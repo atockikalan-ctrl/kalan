@@ -1,10 +1,10 @@
-name: Prepare self-hosted Minecraft 1.8 WASM
+name: Prepare self-hosted Minecraft 1.13.2
 
 on:
   push:
     branches: [main]
     paths-ignore:
-      - "games/minecraft-18/**"
+      - "games/minecraft-1132/**"
 
 permissions:
   contents: write
@@ -16,31 +16,28 @@ jobs:
       - name: Check out KALANGAMER
         uses: actions/checkout@v4
 
-      - name: Download the complete official EaglercraftX u53 WASM client
+      - name: Download Eaglercraft 1.13.2 English client
         run: |
-          mkdir -p games/minecraft-18 /tmp/eagler-u53
+          mkdir -p games/minecraft-1132
           curl --fail --location --retry 3 \
-            "https://cdn.eaglercraft.ru/dl/1.8.8/EaglercraftX_1.8_u53_WASM-GC_Offline.zip" \
-            --output /tmp/eagler-u53.zip
-          unzip -q /tmp/eagler-u53.zip -d /tmp/eagler-u53
+            "https://raw.githubusercontent.com/MilkdromedaStudios/all-of-eaglercraft/main/Eaglercraft%201.13.2%20EN.html" \
+            --output games/minecraft-1132/Eaglercraft-1.13.2-EN.html
 
-          # The official offline HTML is a complete self-contained client.
-          client="$(find /tmp/eagler-u53 -type f -name 'EaglercraftX_1.8_u53_WASM-GC_Offline.html' -print -quit)"
-          test -n "$client"
-          cp "$client" games/minecraft-18/EaglercraftX-1.8-WASM.html
-          test "$(wc -c < games/minecraft-18/EaglercraftX-1.8-WASM.html)" -gt 10000000
+          size="$(wc -c < games/minecraft-1132/Eaglercraft-1.13.2-EN.html)"
+          echo "Downloaded client size: $size bytes"
+          test "$size" -gt 10000000
+          # Cloudflare Pages has a per-file upload limit; fail clearly if exceeded.
+          test "$size" -lt 25000000
 
-          # Remove the mismatched external resources from the earlier attempt.
-          rm -rf games/minecraft-18/assets.epk games/minecraft-18/lang
-
-      - name: Commit complete hosted game client
+      - name: Remove the broken 1.8.8 client and commit 1.13.2
         run: |
+          rm -rf games/minecraft-18
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A games/minecraft-18/
+          git add -A games/minecraft-18/ games/minecraft-1132/
           if git diff --cached --quiet; then
-            echo "Client is already up to date."
+            echo "Minecraft 1.13.2 client is already up to date."
             exit 0
           fi
-          git commit -m "Replace Minecraft 1.8 with complete official u53 client"
+          git commit -m "Replace Minecraft 1.8.8 with Eaglercraft 1.13.2"
           git push
