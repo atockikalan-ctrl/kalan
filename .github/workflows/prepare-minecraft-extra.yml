@@ -8,7 +8,6 @@ on:
       - "games/minecraft-112/**"
       - "games/minecraft-1112/**"
       - "games/minecraft-1710/**"
-      - "games/minecraft-172/**"
 
 permissions:
   contents: write
@@ -30,17 +29,15 @@ jobs:
             ["112"]="Eaglercraft%201.12%20EN.html"
             ["1112"]="Eaglercraft%201.11.2.html"
             ["1710"]="EaglercraftX%201.7.10%20WASM.html"
-            ["172"]="EaglerLite%20v1.7.2.html"
           )
           declare -A TITLES=(
             ["1206"]="Minecraft 1.20.6"
             ["112"]="Minecraft 1.12"
             ["1112"]="Minecraft 1.11.2"
             ["1710"]="Minecraft 1.7.10"
-            ["172"]="Minecraft 1.7.2"
           )
 
-          for version in 1206 112 1112 1710 172; do
+          for version in 1206 112 1112 1710; do
             dir="games/minecraft-$version"
             mkdir -p "$dir"
             source="${SOURCES[$version]}"
@@ -84,7 +81,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add games/minecraft-1206/ games/minecraft-112/ games/minecraft-1112/ games/minecraft-1710/ games/minecraft-172/
+          git add -A games/minecraft-1206/ games/minecraft-112/ games/minecraft-1112/ games/minecraft-1710/
           if git diff --cached --quiet; then
             echo "Minecraft clients are already up to date."
             exit 0
