@@ -1,0 +1,37 @@
+name: Prepare self-hosted Minecraft 1.12.2
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "games/minecraft-1122/Eaglercraft-1.12.2-WASM.html"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-client:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out KALANGAMER
+        uses: actions/checkout@v4
+
+      - name: Download the public Eaglercraft 1.12.2 WASM build
+        run: |
+          mkdir -p games/minecraft-1122
+          curl --fail --location --retry 3 \
+            "https://raw.githubusercontent.com/MilkdromedaStudios/all-of-eaglercraft/main/Eaglercraft%201.12.2%20WASM.html" \
+            --output games/minecraft-1122/Eaglercraft-1.12.2-WASM.html
+          test "$(wc -c < games/minecraft-1122/Eaglercraft-1.12.2-WASM.html)" -gt 20000000
+
+      - name: Commit hosted game client
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add games/minecraft-1122/Eaglercraft-1.12.2-WASM.html
+          if git diff --cached --quiet; then
+            echo "Client is already up to date."
+            exit 0
+          fi
+          git commit -m "Add self-hosted Minecraft 1.12.2 WASM client"
+          git push
