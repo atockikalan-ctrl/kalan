@@ -220,6 +220,7 @@ $('#player-picker').innerHTML=players.map(p=>`<div class="person" style="cursor:
 const SUPABASE_URL = 'https://oylzvrngrjfbsawmtjll.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_bPRkvpp5H8Imv2xvf34yaw_t9nbQAZO';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+window.kalanSupabase = sb; // Share one auth session across every KALAN feature.
 let currentUser = null, currentConversation = null, messageChannel = null, currentGroupChat = false;
 const el = id => document.getElementById(id);
 const safe = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -392,7 +393,7 @@ refreshSession();
 
 
 (() => {
- const db = window.supabase.createClient('https://oylzvrngrjfbsawmtjll.supabase.co','sb_publishable_bPRkvpp5H8Imv2xvf34yaw_t9nbQAZO');
+ const db = window.kalanSupabase;
  const $ = id => document.getElementById(id);
  const esc = v => String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const toast = msg => { const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); };
@@ -480,7 +481,7 @@ $('profile-modal').classList.remove('open');toast('Profile updated!');await refr
 </script>
 <script>
 (() => {
- const db=window.supabase.createClient('https://oylzvrngrjfbsawmtjll.supabase.co','sb_publishable_bPRkvpp5H8Imv2xvf34yaw_t9nbQAZO');
+ const db=window.kalanSupabase;
  const $=id=>document.getElementById(id);
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const note=s=>{const t=$('toast');if(!t)return;t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)};
@@ -552,7 +553,7 @@ $('profile-modal').classList.remove('open');toast('Profile updated!');await refr
 </script>
 <script>
 (() => {
- const db=window.supabase.createClient('https://oylzvrngrjfbsawmtjll.supabase.co','sb_publishable_bPRkvpp5H8Imv2xvf34yaw_t9nbQAZO');
+ const db=window.kalanSupabase;
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  async function loadOwnActivity(){
   const {data:{session}}=await db.auth.getSession();const user=session?.user;
