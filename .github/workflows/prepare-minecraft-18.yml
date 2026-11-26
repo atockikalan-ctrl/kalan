@@ -16,42 +16,62 @@ jobs:
       - name: Check out KALANGAMER
         uses: actions/checkout@v4
 
-      - name: Download and compress Eaglercraft 1.13.2 English client
+      - name: Download and split-compress Eaglercraft 1.13.2
         run: |
           mkdir -p games/minecraft-1132
           curl --fail --location --retry 3 \
             "https://raw.githubusercontent.com/MilkdromedaStudios/all-of-eaglercraft/main/Eaglercraft%201.13.2%20EN.html" \
             --output /tmp/Eaglercraft-1.13.2-EN.html
+          test "$(wc -c < /tmp/Eaglercraft-1.13.2-EN.html)" -gt 50000000
 
-          original="$(wc -c < /tmp/Eaglercraft-1.13.2-EN.html)"
-          echo "Original client size: $original bytes"
-          test "$original" -gt 50000000
+          gzip -9 -c /tmp/Eaglercraft-1.13.2-EN.html > /tmp/Eaglercraft-1.13.2-EN.html.gz
+          split -b 18m -d -a 2 /tmp/Eaglercraft-1.13.2-EN.html.gz games/minecraft-1132/client.part
+          ls -lh games/minecraft-1132/client.part*
+          for part in games/minecraft-1132/client.part*; do
+            test "$(wc -c < "$part")" -lt 25000000
+          done
 
-          # Cloudflare Pages limits individual deployed files to 25 MiB.
-          # Serve the gzip-compressed HTML with Content-Encoding: gzip.
-          gzip -9 -c /tmp/Eaglercraft-1.13.2-EN.html > games/minecraft-1132/Eaglercraft-1.13.2-EN.html
-          compressed="$(wc -c < games/minecraft-1132/Eaglercraft-1.13.2-EN.html)"
-          echo "Compressed client size: $compressed bytes"
-          test "$compressed" -lt 25000000
-
-      - name: Configure compressed HTML response
+      - name: Create browser loader for split client
         run: |
-          cat >> _headers <<'HEADERS'
+          cat > games/minecraft-1132/Eaglercraft-1.13.2-EN.html <<'HTML'
+          <!doctype html>
+          <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Minecraft 1.13.2</title>
+          <style>html,body{margin:0;width:100%;height:100%;background:#111;color:#eee;font:16px system-ui;display:grid;place-items:center}#status{text-align:center;padding:24px}</style>
+          </head><body><div id="status">Loading Minecraft 1.13.2…<br><small>Downloading game files</small></div>
+          <script>
+          (async()=>{
+            const status=document.getElementById('status');
+            try{
+              const parts=[];
+              for(let i=0;i<3;i++){
+                const name='client.part'+String(i).padStart(2,'0');
+                const response=await fetch(name);
+                if(!response.ok) throw new Error('Could not load '+name+' ('+response.status+')');
+                parts.push(await response.blob());
+                status.innerHTML='Loading Minecraft 1.13.2…<br><small>Downloaded part '+(i+1)+' of 3</small>';
+              }
+              const compressed=new Blob(parts);
+              if(!('DecompressionStream' in window)) throw new Error('This browser does not support gzip decompression.');
+              const html=await new Response(compressed.stream().pipeThrough(new DecompressionStream('gzip'))).text();
+              document.open();
+              document.write(html);
+              document.close();
+            }catch(error){
+              status.textContent='Minecraft could not load: '+error.message;
+            }
+          })();
+          </script></body></html>
+          HTML
 
-          /games/minecraft-1132/Eaglercraft-1.13.2-EN.html
-            Content-Type: text/html; charset=utf-8
-            Content-Encoding: gzip
-          HEADERS
-
-      - name: Remove the broken 1.8.8 client and commit 1.13.2
+      - name: Remove broken 1.8.8 files and commit 1.13.2
         run: |
           rm -rf games/minecraft-18
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A _headers games/minecraft-18/ games/minecraft-1132/
+          git add -A games/minecraft-18/ games/minecraft-1132/
           if git diff --cached --quiet; then
             echo "Minecraft 1.13.2 client is already up to date."
             exit 0
           fi
-          git commit -m "Replace Minecraft 1.8.8 with compressed Eaglercraft 1.13.2"
+          git commit -m "Host split Eaglercraft 1.13.2 client on KALANGAMER"
           git push
