@@ -1,13 +1,22 @@
 {
   "name": "kalan-web-proxy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Isolated local development shell for KALAN Web",
+  "description": "Self-hosted KALAN Web browser proxy service",
   "type": "module",
   "scripts": {
     "start": "node server.js"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "@mercuryworkshop/epoxy-transport": "3.0.1",
+    "@mercuryworkshop/libcurl-transport": "2.0.5",
+    "@mercuryworkshop/scramjet": "2.0.67-alpha.2",
+    "@mercuryworkshop/scramjet-controller": "0.0.14",
+    "@mercuryworkshop/scramjet-utils": "0.0.3",
+    "@mercuryworkshop/wisp-js": "0.4.1",
+    "express": "5.1.0"
   }
 }
