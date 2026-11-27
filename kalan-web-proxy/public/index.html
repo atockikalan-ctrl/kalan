@@ -19,14 +19,16 @@
     input:focus{border-color:#9b7aff}
     #go{background:#8865ec;border-color:#8865ec;font-weight:700;padding-inline:20px}
     #status{font-size:12px;color:#9d9bb0;white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis}
-    main{height:calc(100vh - 68px);padding:16px}
+    main{height:calc(100vh - 68px);padding:16px;min-height:0;overflow:hidden}
     #home{height:100%;display:grid;place-items:center;text-align:center}
+    /* Author styles on #home/#browser-frame must not override the HTML hidden attribute. */
+    #home[hidden],#browser-frame[hidden]{display:none!important}
     .welcome{max-width:650px;padding:36px}
     .eyebrow{color:#aa8cff;letter-spacing:3px;font-size:11px;font-weight:800}
     h1{font-size:clamp(38px,7vw,68px);margin:12px 0}
     p{color:#aaa9bd;line-height:1.7}
     .hint{margin:26px auto 0;padding:12px 16px;border:1px solid #39304f;border-radius:10px;background:#171322;color:#cfc4f1;font-size:12px;max-width:500px}
-    #browser-frame{width:100%;height:100%;border:1px solid #302b42;border-radius:12px;background:white}
+    #browser-frame{display:block;width:100%;height:100%;border:1px solid #302b42;border-radius:12px;background:white}
     @media(max-width:700px){header{height:auto;min-height:68px;flex-wrap:wrap;padding:12px}.brand{width:100%}#status{max-width:100%}.controls button{padding:8px}main{height:calc(100vh - 112px);padding:8px}}
   </style>
 </head>
