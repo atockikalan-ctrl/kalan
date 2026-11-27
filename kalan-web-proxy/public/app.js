@@ -70,6 +70,7 @@ function renderTabs() {
     item.append(select, close);
     tabStrip.append(item);
   }
+  tabStrip.append(newTabButton);
 }
 
 function activateTab(id) {
@@ -97,7 +98,7 @@ function updateTabFromUrl(tab, url) {
   renderTabs();
 }
 
-function createTab(initialUrl = null) {
+function createTab() {
   const id = nextTabId++;
   const frame = document.createElement("iframe");
   frame.className = "browser-frame";
@@ -116,7 +117,6 @@ function createTab(initialUrl = null) {
     });
   }
   activateTab(id);
-  if (initialUrl) navigateTo(initialUrl, tab);
   return tab;
 }
 
