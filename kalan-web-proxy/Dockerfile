@@ -1,9 +1,12 @@
-FROM node:22-alpine
+FROM node:22.13-alpine
 
 ENV NODE_ENV=production PORT=4173
 WORKDIR /app
 
-COPY --chown=node:node package.json server.js ./
+COPY package.json ./
+RUN npm install --omit=dev --no-audit --no-fund
+
+COPY --chown=node:node server.js ./
 COPY --chown=node:node public ./public
 
 USER node
