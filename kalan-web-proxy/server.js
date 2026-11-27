@@ -1,38 +1,47 @@
 import http from "node:http";
-import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 import path from "node:path";
+import express from "express";
+import { scramjetPath } from "@mercuryworkshop/scramjet/path";
+import { server as wisp } from "@mercuryworkshop/wisp-js/server";
 
-const here = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+const dirOf = (specifier) => path.dirname(require.resolve(specifier));
+const app = express();
 const port = Number(process.env.PORT || 4173);
 
-const server = http.createServer(async (req, res) => {
+app.disable("x-powered-by");
+app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "no-referrer");
   res.setHeader("Cache-Control", "no-store");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  next();
+});
 
-  if (req.url === "/healthz") {
-    res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-    res.end(JSON.stringify({ ok: true, service: "kalan-web-proxy-shell", proxyReady: false }));
+app.get("/healthz", (_req, res) => {
+  res.json({ ok: true, service: "kalan-web-proxy", proxyReady: true, access: "local-only" });
+});
+
+app.use("/scram/", express.static(scramjetPath, { fallthrough: false, index: false }));
+app.use("/utils/", express.static(dirOf("@mercuryworkshop/scramjet-utils"), { fallthrough: false, index: false }));
+app.use("/controller/", express.static(dirOf("@mercuryworkshop/scramjet-controller"), { fallthrough: false, index: false }));
+app.use("/libcurl/", express.static(dirOf("@mercuryworkshop/libcurl-transport"), { fallthrough: false, index: false }));
+app.use("/epoxy/", express.static(dirOf("@mercuryworkshop/epoxy-transport"), { fallthrough: false, index: false }));
+app.use(express.static(path.join(path.dirname(new URL(import.meta.url).pathname), "public"), { index: "index.html" }));
+
+const server = http.createServer(app);
+server.on("upgrade", (req, socket, head) => {
+  const pathname = new URL(req.url ?? "/", "http://localhost").pathname;
+  if (pathname === "/wisp/") {
+    req.url = pathname;
+    wisp.routeRequest(req, socket, head);
     return;
   }
-
-  if (req.url !== "/" && req.url !== "/index.html") {
-    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
-    res.end("Not found");
-    return;
-  }
-
-  try {
-    const html = await readFile(path.join(here, "public", "index.html"));
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(html);
-  } catch {
-    res.writeHead(500, { "Content-Type": "text/plain; charset=utf-8" });
-    res.end("KALAN Web local service could not load its interface.");
-  }
+  socket.end();
 });
 
 server.listen(port, "0.0.0.0", () => {
-  console.log(`KALAN Web local service listening on port ${port}`);
+  console.log(`KALAN Web proxy listening on port ${port} (host port must remain loopback-only)`);
 });
