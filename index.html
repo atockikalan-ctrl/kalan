@@ -331,9 +331,9 @@ body{background:#b9787b;color:#342b2c}
  </div>
  <div class="panel" style="margin-bottom:16px">
   <div class="panel-head"><div><div class="eyebrow">YOUR WINDOWS PC</div><h3>KALAN Cloud Stream</h3></div><span class="muted">ADMIN ONLY</span></div>
-  <p class="muted" style="margin-bottom:16px">The stream connection is not configured yet. This button is intentionally inactive until the Windows host, secure relay, and server-side session checks are installed.</p>
-  <button class="primary" id="kalan-cloud-connect" type="button" disabled style="opacity:.55;cursor:not-allowed">Connect to KALAN Cloud · Coming next</button>
-  <div class="game-player-note" style="margin-top:14px">No desktop stream is exposed by this page yet. Nothing is listening on your PC from this dashboard.</div>
+  <p class="muted" style="margin-bottom:16px">Connect securely to the KALAN Cloud service and check whether your Windows host is online.</p>
+  <button class="primary" id="kalan-cloud-connect" type="button">Connect to KALAN Cloud</button>
+  <div id="kalan-cloud-status" class="game-player-note" role="status" aria-live="polite" style="margin-top:14px">CLOUD SERVICE: NOT CHECKED</div>
  </div>
  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
   <div class="panel"><div class="panel-head"><h3>Guest access codes</h3><span class="muted">128 digits</span></div><p class="muted">Guest-code creation, hashing, expiration, and revocation will be handled by a server function—not browser JavaScript.</p><button class="back-game" type="button" disabled style="opacity:.55">Code management · Not configured</button></div>
@@ -445,6 +445,28 @@ const SUPABASE_URL = 'https://oylzvrngrjfbsawmtjll.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_bPRkvpp5H8Imv2xvf34yaw_t9nbQAZO';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 window.kalanSupabase = sb; // Share one auth session across every KALAN feature.
+const cloudConnectButton = document.getElementById('kalan-cloud-connect');
+const cloudStatusBox = document.getElementById('kalan-cloud-status');
+if (cloudConnectButton) cloudConnectButton.addEventListener('click', async () => {
+  if (!window.kalanIsAdmin) { note('Admin authorization required.'); return; }
+  cloudConnectButton.disabled = true;
+  cloudConnectButton.textContent = 'Checking secure connection…';
+  cloudStatusBox.textContent = 'CONTACTING KALAN CLOUD…';
+  try {
+    const { data, error } = await sb.functions.invoke('kalan-cloud-status', { method: 'GET' });
+    if (error) throw error;
+    if (!data?.ok || data.authorization !== 'admin_verified') throw new Error(data?.error || 'Cloud authorization failed.');
+    cloudStatusBox.textContent = 'CONNECTED TO KALAN CLOUD · ADMIN VERIFIED · WINDOWS HOST NOT CONNECTED YET';
+    cloudConnectButton.textContent = 'KALAN Cloud Connected';
+    note('Secure KALAN Cloud connection established.');
+  } catch (err) {
+    cloudStatusBox.textContent = 'CONNECTION FAILED · ' + (err?.message || 'Please try again.');
+    cloudConnectButton.textContent = 'Retry KALAN Cloud Connection';
+    note('Could not connect to KALAN Cloud.');
+  } finally {
+    cloudConnectButton.disabled = false;
+  }
+});
 let currentUser = null, currentConversation = null, messageChannel = null, currentGroupChat = false;
 const el = id => document.getElementById(id);
 const safe = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
