@@ -329,11 +329,19 @@ body{background:#b9787b;color:#342b2c}
   <div class="panel"><div class="eyebrow">KALAN CLOUD</div><h2 style="font:600 19px var(--display);margin:0 0 6px">Not connected</h2><p class="muted">The secure Windows streaming agent has not been connected yet.</p><span class="muted">STREAM SERVICE: NOT CONFIGURED</span></div>
   <div class="panel"><div class="eyebrow">ACCESS CONTROL</div><h2 style="font:600 19px var(--display);margin:0 0 6px">Separate access paths</h2><p class="muted">Admin access uses your verified account. Guest access will use its own 128-digit code.</p><span class="muted">NO GUEST CODE CREATED</span></div>
  </div>
- <div class="panel" style="margin-bottom:16px">
-  <div class="panel-head"><div><div class="eyebrow">YOUR WINDOWS PC</div><h3>KALAN Cloud Stream</h3></div><span class="muted">ADMIN ONLY</span></div>
-  <p class="muted" style="margin-bottom:16px">Connect securely to the KALAN Cloud service and check whether your Windows host is online.</p>
-  <button class="primary" id="kalan-cloud-connect" type="button">Connect to KALAN Cloud</button>
-  <div id="kalan-cloud-status" class="game-player-note" role="status" aria-live="polite" style="margin-top:14px">CLOUD SERVICE: NOT CHECKED</div>
+ <div class="panel" id="kalan-cloud-console" style="margin-bottom:16px">
+  <div class="panel-head"><div><div class="eyebrow">YOUR WINDOWS PC</div><h3>KALAN Cloud Player</h3></div><span class="muted">ADMIN ONLY</span></div>
+  <p class="muted" style="margin-bottom:16px">Privately stream your home PC from this page. Only your server-verified admin session can start a stream.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+   <button class="primary" id="kalan-cloud-connect" type="button">▶ Stream PC</button>
+   <button class="back-game" id="kalan-cloud-fullscreen" type="button" disabled>⛶ Fullscreen</button>
+   <span class="muted" id="kalan-cloud-access">ADMIN ACCESS REQUIRED</span>
+  </div>
+  <div id="kalan-cloud-status" class="game-player-note" role="status" aria-live="polite" style="margin-top:14px">CLOUD PLAYER: NOT CONNECTED</div>
+  <div id="kalan-cloud-player" style="display:none;margin-top:14px;background:#080b12;border:1px solid #273147;border-radius:12px;overflow:hidden">
+   <iframe id="kalan-cloud-frame" title="KALAN Cloud PC stream" allow="autoplay; fullscreen; gamepad; clipboard-read; clipboard-write" allowfullscreen referrerpolicy="no-referrer" style="display:block;width:100%;height:min(72vh,760px);min-height:420px;border:0;background:#05070c"></iframe>
+  </div>
+  <p class="muted" id="kalan-cloud-help" style="margin-top:12px">The player will appear here when the secure Windows host is connected. No public or guest streaming access is enabled.</p>
  </div>
  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
   <div class="panel"><div class="panel-head"><h3>Guest access codes</h3><span class="muted">128 digits</span></div><p class="muted">Guest-code creation, hashing, expiration, and revocation will be handled by a server function—not browser JavaScript.</p><button class="back-game" type="button" disabled style="opacity:.55">Code management · Not configured</button></div>
@@ -447,25 +455,61 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 window.kalanSupabase = sb; // Share one auth session across every KALAN feature.
 const cloudConnectButton = document.getElementById('kalan-cloud-connect');
 const cloudStatusBox = document.getElementById('kalan-cloud-status');
+const cloudAccessLabel = document.getElementById('kalan-cloud-access');
+const cloudPlayer = document.getElementById('kalan-cloud-player');
+const cloudFrame = document.getElementById('kalan-cloud-frame');
+const cloudFullscreen = document.getElementById('kalan-cloud-fullscreen');
+const cloudHelp = document.getElementById('kalan-cloud-help');
 if (cloudConnectButton) cloudConnectButton.addEventListener('click', async () => {
-  if (!window.kalanIsAdmin) { note('Admin authorization required.'); return; }
+  if (!window.kalanIsAdmin) {
+    cloudAccessLabel.textContent = 'ACCESS DENIED';
+    cloudStatusBox.textContent = 'ACCESS DENIED · ADMIN AUTHORIZATION REQUIRED';
+    cloudPlayer.style.display = 'none';
+    cloudFrame.removeAttribute('src');
+    note('Admin authorization required.');
+    return;
+  }
   cloudConnectButton.disabled = true;
-  cloudConnectButton.textContent = 'Checking secure connection…';
-  cloudStatusBox.textContent = 'CONTACTING KALAN CLOUD…';
+  cloudConnectButton.textContent = 'Authorizing…';
+  cloudAccessLabel.textContent = 'VERIFYING ADMIN SESSION';
+  cloudStatusBox.textContent = 'CONTACTING SECURE KALAN CLOUD SERVICE…';
   try {
     const { data, error } = await sb.functions.invoke('kalan-cloud-status', { method: 'GET' });
     if (error) throw error;
     if (!data?.ok || data.authorization !== 'admin_verified') throw new Error(data?.error || 'Cloud authorization failed.');
-    cloudStatusBox.textContent = 'CONNECTED TO KALAN CLOUD · ADMIN VERIFIED · WINDOWS HOST NOT CONNECTED YET';
-    cloudConnectButton.textContent = 'KALAN Cloud Connected';
-    note('Secure KALAN Cloud connection established.');
+    cloudAccessLabel.textContent = 'ADMIN VERIFIED';
+    if (data.streaming?.available === true && typeof data.playerUrl === 'string' && /^https:\/\//i.test(data.playerUrl)) {
+      cloudFrame.src = data.playerUrl;
+      cloudPlayer.style.display = 'block';
+      cloudFullscreen.disabled = false;
+      cloudStatusBox.textContent = 'KALAN CLOUD AUTHORIZED · CONNECTING TO YOUR PC…';
+      cloudHelp.textContent = 'Your private stream is loading inside KALANGAMER.';
+      cloudConnectButton.textContent = 'Reconnect Stream';
+    } else {
+      cloudPlayer.style.display = 'none';
+      cloudFrame.removeAttribute('src');
+      cloudFullscreen.disabled = true;
+      cloudStatusBox.textContent = 'ADMIN VERIFIED · WINDOWS HOST NOT CONNECTED';
+      cloudHelp.textContent = 'Your website player is ready, but the Windows streaming host and secure browser-stream URL are not configured yet. The player will appear here once the host is connected.';
+      cloudConnectButton.textContent = 'Stream PC';
+    }
   } catch (err) {
+    cloudAccessLabel.textContent = 'ACCESS CHECK FAILED';
     cloudStatusBox.textContent = 'CONNECTION FAILED · ' + (err?.message || 'Please try again.');
-    cloudConnectButton.textContent = 'Retry KALAN Cloud Connection';
-    note('Could not connect to KALAN Cloud.');
+    cloudPlayer.style.display = 'none';
+    cloudFrame.removeAttribute('src');
+    cloudFullscreen.disabled = true;
+    cloudConnectButton.textContent = 'Retry Stream PC';
+    note('Could not authorize KALAN Cloud.');
   } finally {
     cloudConnectButton.disabled = false;
   }
+});
+if (cloudFullscreen) cloudFullscreen.addEventListener('click', async () => {
+  if (!window.kalanIsAdmin || !cloudFrame?.src) { note('No authorized stream is active.'); return; }
+  try {
+    if (cloudPlayer.requestFullscreen) await cloudPlayer.requestFullscreen();
+  } catch (_) { note('Fullscreen is unavailable in this browser.'); }
 });
 let currentUser = null, currentConversation = null, messageChannel = null, currentGroupChat = false;
 const el = id => document.getElementById(id);
