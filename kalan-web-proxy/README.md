@@ -1,34 +1,38 @@
-# KALAN Web Proxy (local development)
+# KALAN Web — local proxy prototype
 
-This service is developed separately from the KALANGAMER Pages frontend.
+This is the first working-browser prototype for the separate KALAN Web service. It is not yet connected to the public KALANGAMER site.
 
-## Current milestone
+## Run it on the Windows PC
 
-This is a local-only service shell. It is **not yet a working web proxy** and must not be exposed to the public internet. The next milestone is integrating and testing a pinned Scramjet + transport stack, followed by server-side access control and destination protections.
+1. Open **PowerShell**.
+2. Run:
 
-## Run locally
+   ```powershell
+   git clone --branch feature/kalan-web-foundation https://github.com/atockikalan-ctrl/kalan.git
+   cd kalan\kalan-web-proxy
+   docker compose up --build
+   ```
 
-From this directory:
+   If you already cloned the repository, open that folder and run `git pull origin feature/kalan-web-foundation` first, then change into `kalan-web-proxy`.
 
-```powershell
-docker compose up --build
-```
+3. Open **http://127.0.0.1:4173** in your browser.
+4. Try a simple public website such as `https://example.com`.
+5. Leave the PowerShell window open while testing. Stop the service with **Ctrl+C**.
 
-Open http://127.0.0.1:4173/ .
+To start it again later, run `docker compose up` from this folder. To stop and remove the container, run `docker compose down`.
 
-Stop it with Ctrl+C, then:
+## What's included
 
-```powershell
-docker compose down
-```
+- Scramjet browser rewriting engine and its service worker.
+- Wisp WebSocket transport hosted by this same local service.
+- Search/address bar and browser frame.
+- Pinned package versions so dependency updates do not silently change the engine.
+- Docker isolation: loopback-only published port, no host-folder mounts, non-root user, read-only container filesystem, dropped Linux capabilities, and resource limits.
 
-## Isolation choices
+## Important limitations — do not expose this service publicly yet
 
-- Binds the published port to loopback only.
-- No host folders are mounted into the container.
-- Runs as an unprivileged user.
-- Read-only container filesystem, with only a temporary `/tmp`.
-- Drops Linux capabilities and blocks privilege escalation.
-- Applies memory, CPU, and process limits.
+This is a local prototype, not a finished shared service. It currently has **no user sign-in/access-code gate, no per-user session reporting, no admin ban/revoke controls, no configurable blocked-domain enforcement, and no integration with the KALANGAMER tab**. Keep the Docker port bound to `127.0.0.1`; do not change it to `0.0.0.0`, add a public tunnel, or share it with classmates.
 
-Docker containers are useful isolation, not an absolute security boundary. Keep this service local-only until authentication, SSRF protections, domain controls, and proxy-specific security tests are complete.
+Docker isolation is not an absolute security boundary. Before any public access, the next milestone must add server-enforced authentication, destination/IP protections against private-network access, domain blocking, usage limits, and admin session revocation, then security-test those controls. Scramjet itself is experimental upstream software; some websites may fail or behave differently from a normal browser.
+
+The separate admin-only KALAN Cloud desktop feature is not part of this proxy container.
