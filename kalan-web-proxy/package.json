@@ -1,0 +1,13 @@
+{
+  "name": "kalan-web-proxy",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Isolated local development shell for KALAN Web",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
