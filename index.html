@@ -318,16 +318,11 @@ body{background:#b9787b;color:#342b2c}
  <div class="panel friend-activity-panel"><div class="panel-head"><div><div class="eyebrow">WHAT YOUR PEOPLE ARE PLAYING</div><h3>Friend activity</h3></div><button class="link" data-page="friends">Your friends →</button></div><div id="friend-activity-feed"><div class="empty">Your friends' recent games will show up here.</div></div></div>
 </div></section>
 <section class="page" id="page-web">
- <div class="page-head"><div class="eyebrow">BUILT INTO KALANGAMER</div><h1>KALAN Web<span>.</span></h1><p class="muted">Browse the web without leaving your gaming space.</p></div>
- <div class="panel" style="max-width:900px;padding:26px">
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px"><div style="width:42px;height:42px;border-radius:12px;background:#e2e8dc;color:#526d52;display:grid;place-items:center;font-size:22px">◎</div><div><h2 style="font:700 20px var(--display);margin:0 0 4px">Your browser is coming online</h2><div class="muted">KALAN Web browser integration</div></div></div>
-  <p class="muted" style="font-size:13px;max-width:650px">The browser prototype is working on your Windows PC, but it is currently local-only. KALANGAMER cannot connect to it from the internet yet.</p>
-  <div style="border:1px solid #e5e0d4;background:#f7f5ee;border-radius:12px;padding:16px;margin-top:18px">
-   <b style="font-size:12px;color:#526d52">CONNECTION STATUS</b>
-   <p style="margin:7px 0 0;color:#73796f;font-size:12px">Not connected · Waiting for secure KALAN Web service setup</p>
-  </div>
-  <p class="muted" style="margin-top:16px">Your browser will appear here once the service has secure access controls and a private connection to your PC. This page does not access your desktop or Steam games.</p>
+ <div class="page-head"><div class="eyebrow">BUILT INTO KALANGAMER</div><h1>KALAN Web<span>.</span></h1><p class="muted">Your browser, right inside your gaming space.</p></div>
+ <div style="height:calc(100vh - 190px);min-height:520px;border:1px solid #dcded2;border-radius:16px;overflow:hidden;background:#10141e;box-shadow:0 8px 28px #343d2a12">
+  <iframe id="kalan-web-app" title="KALAN Web browser" src="http://127.0.0.1:4173" style="display:block;width:100%;height:100%;border:0;background:#10141e" loading="lazy" referrerpolicy="no-referrer" allow="clipboard-read; clipboard-write"></iframe>
  </div>
+ <p class="muted" style="margin-top:10px">Local preview: this connects to the KALAN Web service running on this same PC at 127.0.0.1:4173. Other users will need the secured hosted connection before they can use it.</p>
 </section>
 <section class="page" id="page-discover"><div class="page-head"><div class="eyebrow">THE GAMEVERSE</div><h1>Discover games<span>.</span></h1><p class="muted">A whole universe of games. Where will you go?</p></div><div class="filters" id="filters"><button class="filter active" data-filter="All">All games</button><button class="filter" data-filter="Adventure">Adventure</button><button class="filter" data-filter="Action">Action</button><button class="filter" data-filter="Puzzle">Puzzle</button><button class="filter" data-filter="Arcade">Arcade</button></div><div class="grid game-icon-grid" id="discover-grid"></div></section>
 <section class="page" id="page-minecraft-hub">
