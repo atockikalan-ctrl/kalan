@@ -1028,7 +1028,25 @@ $('profile-modal').classList.remove('open');toast('Profile updated!');await refr
 </script>
 <script src="/kalan-social.js"></script>
 <script src="/kalan-arcade.js"></script>
+<style>
+/* KALAN Media Station phase-two preview */
+.km-preview-panel{margin:18px 0;padding:18px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.km-preview-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.km-preview-heading h2{font:600 19px var(--display);margin:0}
+.km-playlist-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px}
+.km-playlist{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:10px}
+.km-playlist b,.km-playlist small{display:block}.km-playlist small{color:var(--muted);font-size:10px;margin-top:4px}
+.km-playlist-actions{display:flex;gap:5px}.km-playlist-actions button,.km-queue-add{border:1px solid var(--line);border-radius:7px;padding:7px 9px;background:var(--bg);color:#d7a0a0;font-size:10px;font-weight:700}
+.km-queue-add{margin:8px 0 0 7px}.km-player-options{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+.km-player-options label{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:11px}
+.km-player-options select{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:7px;padding:7px}
+.km-creator-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.km-stat{padding:13px;background:var(--panel2);border:1px solid var(--line);border-radius:10px}
+.km-stat small{display:block;color:var(--muted);font-size:10px}.km-stat b{display:block;font:600 22px var(--display);margin-top:6px}
+@media(max-width:650px){.km-creator-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.km-preview-heading{align-items:flex-start;flex-direction:column}.km-player-options{align-items:flex-start;flex-direction:column}}
+</style>
 <script src="/kalan-media.js"></script>
+<script src="/kalan-media-preview.js"></script>
 <script src="/kalan-global-suite.js"></script>
 <script src="/kalan-activity.js"></script>
 
