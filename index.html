@@ -391,6 +391,23 @@ body.admin-hacker.admin-fedora .panel,body.admin-hacker.admin-fedora .game{backg
 body.admin-hacker.admin-fedora .primary,body.admin-hacker.admin-fedora .kalan-action{background:#3c91cf!important;color:#061521!important;border-color:#3c91cf!important}
 body.admin-hacker.admin-fedora .hero{background:linear-gradient(120deg,#0a1b2b,#123d60 60%,#0a1b2b);border:1px solid #294b6a}
 </style>
+
+<style id="kalan-admin-distro-readable-text">
+/* Keep every admin label readable and give each distro its own text identity. */
+body.admin-hacker{--admin-ink:#d8f5df;--admin-muted:#9bb5a2;--admin-accent:#39ff69}
+body.admin-debian{--admin-ink:#f7dce7;--admin-muted:#d6a9bc;--admin-accent:#ed4b83}
+body.admin-ubuntu{--admin-ink:#ffe4d5;--admin-muted:#d8b6a6;--admin-accent:#e95420}
+body.admin-cachy{--admin-ink:#e0f5e8;--admin-muted:#a8c9b4;--admin-accent:#7bdba0}
+body.admin-fedora{--admin-ink:#dceeff;--admin-muted:#a9c5df;--admin-accent:#51a2da}
+body.admin-hacker .page,body.admin-hacker .page *{color:var(--admin-ink)}
+body.admin-hacker .muted,body.admin-hacker small,body.admin-hacker .eyebrow,body.admin-hacker .side-label{color:var(--admin-muted)}
+body.admin-hacker .brand em,body.admin-hacker .welcome h1 span,body.admin-hacker .page-head h1 span,body.admin-hacker .link,body.admin-hacker .view{color:var(--admin-accent)}
+body.admin-hacker button{color:var(--admin-ink)}
+body.admin-hacker input,body.admin-hacker textarea{color:var(--admin-ink)}
+body.admin-hacker .primary,body.admin-hacker .light{color:#fff}
+body.admin-hacker .distro-theme-choice.active{border-color:var(--admin-accent);color:var(--admin-accent)}
+body.admin-hacker .panel,body.admin-hacker .game,body.admin-hacker .tip{color:var(--admin-ink)}
+</style>
 </head>
 <body><div class="shell">
 <aside class="sidebar" id="sidebar"><a class="brand" href="#"><span class="brand-mark">K</span>kalan<em>.</em></a><div class="side-label">MENU</div><nav class="nav"><button class="active" data-page="home"><span>⌂</span>Home</button><button data-page="minecraft-hub"><span>⛏</span>Minecraft</button><button data-page="discover"><span>⌕</span>Discover</button><button data-page="library"><span>▣</span>My library</button><button data-page="media"><span>♫</span>KALAN Media</button><button data-page="web"><span>◎</span>KALAN Web</button><button data-page="challenges"><span>🏆</span>Challenges</button><button data-page="community"><span>◉</span>Community</button><button data-page="friends"><span>♧</span>Friends</button><button data-page="messages"><span>✉</span>Messages</button><button data-page="feed"><span>▤</span>Community feed</button><button data-page="activity"><span>◷</span>Activity</button><button data-page="parties"><span>♧</span>Parties</button><button data-page="game-nights"><span>☾</span>Game Nights</button><button data-page="player-finder"><span>⌕</span>Player Finder</button><button data-page="admin-cloud" id="admin-cloud-nav" hidden><span>⬡</span>Admin Control Room</button></nav><div class="side-label spacer">YOUR SPACE</div><nav class="nav"><button data-page="profile"><span>♙</span>My profile</button><button data-page="leaderboards"><span>♜</span>Leaderboards</button></nav><div class="sidebar-bottom"><div class="tip"><div style="color:#b7a5ff;margin-bottom:8px">✦ YOUR NEXT ADVENTURE</div><b>Find something new to play.</b><p>A whole universe is waiting.</p><button data-page="discover">Explore games →</button></div><div class="user-mini"><div class="avatar" id="side-avatar">K</div><div><b id="side-name">Kalan</b><small id="side-handle">@kalan</small></div></div></div></aside>
@@ -1011,10 +1028,10 @@ $('profile-modal').classList.remove('open');toast('Profile updated!');await refr
  const originalBrand=brand?.innerHTML||'K';
  const marks={
  arch:'<svg viewBox="0 0 256 256" role="img" aria-label="Arch Linux" width="25" height="25"><path fill="#39ff69" d="M127.976 0c-11.397 27.936-18.27 46.21-30.959 73.315 7.78 8.245 17.329 17.846 32.837 28.69-16.673-6.859-28.045-13.746-36.544-20.892C77.07 114.992 51.63 163.25 0 256c40.579-23.422 72.035-37.863 101.35-43.373a74.3 74.3 0 0 1-1.926-17.378l.049-1.3c.644-25.992 14.168-45.98 30.188-44.624 16.02 1.357 28.473 23.542 27.83 49.535-.122 4.89-.674 9.596-1.638 13.96C184.851 218.49 215.97 232.894 256 256c-7.893-14.529-14.938-27.626-21.666-40.1-10.598-8.212-21.652-18.9-44.2-30.47 15.498 4.025 26.595 8.67 35.244 13.863C156.973 71.958 151.434 17.038 127.976 0"/></svg>',
- debian:'<svg viewBox="0 0 100 100" role="img" aria-label="Debian swirl" width="26" height="26"><path d="M50 10C26 9 16 30 25 47c8 15 30 18 39 5 8-12-1-27-13-25-8 1-11 10-7 15 3 4 9 4 11 0" fill="none" stroke="#ed4b83" stroke-width="8" stroke-linecap="round"/></svg>',
+ debian:'<img src="https://1000logos.net/wp-content/uploads/2021/06/Debian-Logo.png" alt="Debian" width="30" height="27" style="object-fit:contain">',
  ubuntu:'<svg viewBox="0 0 100 100" role="img" aria-label="Ubuntu logo" width="26" height="26"><circle cx="50" cy="50" r="29" fill="none" stroke="#fff" stroke-width="9"/><g fill="#fff"><circle cx="50" cy="13" r="9"/><circle cx="18" cy="68" r="9"/><circle cx="82" cy="68" r="9"/></g></svg>',
- cachy:'<span aria-label="CachyOS logo" style="font:800 23px var(--display);color:#9dffbd">C</span>',
- fedora:'<span aria-label="Fedora logo" style="font:800 27px var(--display);color:#bde7ff">f</span>'
+ cachy:'<img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/CachyOS_Logo.svg" alt="CachyOS" width="27" height="27" style="object-fit:contain">',
+ fedora:'<img src="https://assets.streamlinehq.com/image/private/w_300%2Ch_300%2Car_1/f_auto/v1/icons/professional-tools/fedora-ea1lchal9kfa0bduinamcp.png/fedora-3knkayy6rrf03ks3pnivwuj.png" alt="Fedora" width="27" height="27" style="object-fit:contain">'
  };
  const themes=['arch','debian','ubuntu','cachy','fedora'];
  const labels={arch:'Arch Linux',debian:'Debian',ubuntu:'Ubuntu',cachy:'CachyOS',fedora:'Fedora'};
