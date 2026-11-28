@@ -1054,43 +1054,6 @@ $('profile-modal').classList.remove('open');toast('Profile updated!');await refr
 <script src="/kalan-global-suite.js"></script>
 <script src="/kalan-activity.js"></script>
 
-<script id="kalan-admin-theme-controller">
-(()=>{
- const brand=document.querySelector('.brand-mark');
- const originalBrand=brand?.innerHTML||'K';
- const marks={
- arch:'<svg viewBox="0 0 256 256" role="img" aria-label="Arch Linux" width="25" height="25"><path fill="#39ff69" d="M127.976 0c-11.397 27.936-18.27 46.21-30.959 73.315 7.78 8.245 17.329 17.846 32.837 28.69-16.673-6.859-28.045-13.746-36.544-20.892C77.07 114.992 51.63 163.25 0 256c40.579-23.422 72.035-37.863 101.35-43.373a74.3 74.3 0 0 1-1.926-17.378l.049-1.3c.644-25.992 14.168-45.98 30.188-44.624 16.02 1.357 28.473 23.542 27.83 49.535-.122 4.89-.674 9.596-1.638 13.96C184.851 218.49 215.97 232.894 256 256c-7.893-14.529-14.938-27.626-21.666-40.1-10.598-8.212-21.652-18.9-44.2-30.47 15.498 4.025 26.595 8.67 35.244 13.863C156.973 71.958 151.434 17.038 127.976 0"/></svg>',
- debian:'<img src="https://1000logos.net/wp-content/uploads/2021/06/Debian-Logo.png" alt="Debian" width="30" height="27" style="object-fit:contain">',
- ubuntu:'<svg viewBox="0 0 100 100" role="img" aria-label="Ubuntu logo" width="26" height="26"><circle cx="50" cy="50" r="29" fill="none" stroke="#fff" stroke-width="9"/><g fill="#fff"><circle cx="50" cy="13" r="9"/><circle cx="18" cy="68" r="9"/><circle cx="82" cy="68" r="9"/></g></svg>',
- cachy:'<img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/CachyOS_Logo.svg" alt="CachyOS" width="27" height="27" style="object-fit:contain">',
- fedora:'<img src="https://assets.streamlinehq.com/image/private/w_300%2Ch_300%2Car_1/f_auto/v1/icons/professional-tools/fedora-ea1lchal9kfa0bduinamcp.png/fedora-3knkayy6rrf03ks3pnivwuj.png" alt="Fedora" width="27" height="27" style="object-fit:contain">'
- };
- const themes=['arch','debian','ubuntu','cachy','fedora'];
- const labels={arch:'Arch Linux',debian:'Debian',ubuntu:'Ubuntu',cachy:'CachyOS',fedora:'Fedora'};
- let isAdmin=false;
- function apply(active,theme){
-  isAdmin=!!active;
-  document.body.classList.toggle('admin-hacker',isAdmin);
-  themes.forEach(t=>document.body.classList.toggle('admin-'+t,isAdmin&&theme===t));
-  if(brand)brand.innerHTML=isAdmin?(marks[theme]||marks.arch):originalBrand;
-  const meta=document.querySelector('meta[name="theme-color"]');
-  if(meta)meta.content=!isAdmin?'#b9787b':({arch:'#050805',debian:'#10080c',ubuntu:'#180f19',cachy:'#101713',fedora:'#081522'}[theme]||'#050805');
-  document.querySelectorAll('.distro-theme-choice').forEach(b=>b.classList.toggle('active',b.dataset.distroTheme===(theme||'arch')));
-  const status=document.getElementById('distro-theme-status');if(status)status.textContent=(labels[theme||'arch']||'Arch Linux')+' theme selected.';
- }
- function bind(){
-  document.querySelectorAll('.distro-theme-choice').forEach(b=>b.addEventListener('click',()=>{
-   if(!isAdmin)return;
-   const theme=b.dataset.distroTheme;
-   try{localStorage.setItem('kalan-admin-distro-theme',theme);}catch(_){}
-   apply(true,theme);
-  }));
- }
- let saved='arch';try{saved=localStorage.getItem('kalan-admin-distro-theme')||'arch';}catch(_){}
- window.addEventListener('kalan-admin-theme',e=>{isAdmin=e.detail?.active===true;apply(isAdmin,saved);});
- if(window.kalanIsAdmin===true)apply(true,saved);else apply(false,'arch');
- bind();
-})();
-</script>
+
 <script src="/kalan-themes.js"></script>
 </body></html>
