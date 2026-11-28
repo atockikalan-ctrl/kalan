@@ -983,4 +983,33 @@ $('profile-modal').classList.remove('open');toast('Profile updated!');await refr
  if(window.kalanIsAdmin===true)apply(true);else apply(false);
 })();
 </script>
+
+<script id="kalan-community-auth-tab-fix">
+(() => {
+  const showMode = mode => {
+    const signup = document.getElementById('signup-form');
+    const login = document.getElementById('login-form');
+    const signupTab = document.getElementById('show-signup');
+    const loginTab = document.getElementById('show-login');
+    if (!signup || !login || !signupTab || !loginTab) return;
+    signup.hidden = mode !== 'signup';
+    login.hidden = mode !== 'login';
+    signup.style.display = mode === 'signup' ? 'block' : 'none';
+    login.style.display = mode === 'login' ? 'block' : 'none';
+    signupTab.classList.toggle('active', mode === 'signup');
+    loginTab.classList.toggle('active', mode === 'login');
+    if (mode === 'login') document.getElementById('login-email')?.focus();
+  };
+  document.addEventListener('click', event => {
+    const tab = event.target.closest('#show-login, #show-signup');
+    if (!tab) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    showMode(tab.id === 'show-login' ? 'login' : 'signup');
+  }, true);
+  document.addEventListener('DOMContentLoaded', () => showMode('signup'));
+  showMode('signup');
+})();
+</script>
+
 </body></html>
