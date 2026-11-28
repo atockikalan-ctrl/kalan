@@ -44,13 +44,15 @@ async function feed(){
  if(!me)return;const {data,error}=await db.from('feed_posts').select('id,user_id,body,game_key,visibility,created_at').order('created_at',{ascending:false}).limit(40);
  if(error){$('feed-posts').innerHTML=empty('The feed is temporarily unavailable.');return;}
  const rows=data||[],ids=[...new Set(rows.map(x=>x.user_id))];
- const [{data:ps},{data:ls}]=await Promise.all([ids.length?db.from('profiles').select('id,username,display_name').in('id',ids):{data:[]},rows.length?db.from('post_likes').select('post_id,user_id').in('post_id',rows.map(x=>x.id)):{data:[]}]);
+ const [{data:ps},{data:ls}]=await Promise.all([ids.length?db.from('profiles').select('id,username,display_name,avatar_url').in('id',ids):{data:[]},rows.length?db.from('post_likes').select('post_id,user_id').in('post_id',rows.map(x=>x.id)):{data:[]}]);
  const people=Object.fromEntries((ps||[]).map(x=>[x.id,x]));
  $('feed-posts').innerHTML=rows.length?rows.map(p=>{
   const u=people[p.user_id]||{},likes=(ls||[]).filter(x=>x.post_id===p.id),liked=likes.some(x=>x.user_id===me.id);
   const game=games.find(g=>g[0]===p.game_key)?.[1]||'';
-  const author=p.body.startsWith('📢 ')?'Admin':(u.display_name||u.username||'Player');
-  return '<article class="kalan-post"><div class="kalan-post-head"><div class="kalan-feed-avatar">'+esc((u.display_name||u.username||'P')[0].toUpperCase())+'</div><div class="kalan-post-author"><b>'+esc(author)+'</b><small>@'+esc(u.username||'player')+' · '+new Date(p.created_at).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+'</small></div>'+(p.user_id===me.id?'<button class="kalan-subtle" data-delete-post="'+p.id+'">Delete</button>':'')+'</div><p>'+esc(p.body).replace(/\n/g,'<br>')+'</p>'+(game?'<small class="kalan-post-game">Playing '+esc(game)+'</small>':'')+'<div class="kalan-post-actions"><button class="kalan-like '+(liked?'liked':'')+'" data-like-post="'+p.id+'">'+(liked?'♥':'♡')+' '+likes.length+' likes</button><span class="kalan-post-privacy">'+(p.visibility==='friends'?'Friends':'Community')+'</span></div></article>';
+  const isAnnouncement=p.body.startsWith('📢 ');
+  const author=isAnnouncement?'Admin':(u.display_name||u.username||'Player');
+  const avatar=u.avatar_url?'<img src="'+esc(u.avatar_url)+'" alt="" loading="lazy">':esc((u.display_name||u.username||'P')[0].toUpperCase());
+  return '<article class="kalan-post"><div class="kalan-post-head"><div class="kalan-feed-avatar">'+avatar+'</div><div class="kalan-post-author"><b>'+esc(author)+'</b><small>'+(isAnnouncement?'':('@'+esc(u.username||'player')+' · '))+new Date(p.created_at).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+'</small></div>'+(p.user_id===me.id?'<button class="kalan-subtle" data-delete-post="'+p.id+'">Delete</button>':'')+'</div><p>'+esc(p.body).replace(/\n/g,'<br>')+'</p>'+(game?'<small class="kalan-post-game">Playing '+esc(game)+'</small>':'')+'<div class="kalan-post-actions"><button class="kalan-like '+(liked?'liked':'')+'" data-like-post="'+p.id+'">'+(liked?'♥':'♡')+' '+likes.length+' likes</button><span class="kalan-post-privacy">'+(p.visibility==='friends'?'Friends':'Community')+'</span></div></article>';
  }).join(''):empty('It is quiet here for now. Share the first little update.');
 }
 async function notices(){
