@@ -365,25 +365,7 @@ body.admin-hacker .game-player-head,body.admin-hacker .game-player-note{border-c
   <div class="panel"><div class="eyebrow">KALAN CLOUD</div><h2 style="font:600 19px var(--display);margin:0 0 6px">Not connected</h2><p class="muted">The secure Windows streaming agent has not been connected yet.</p><span class="muted">STREAM SERVICE: NOT CONFIGURED</span></div>
   <div class="panel"><div class="eyebrow">ACCESS CONTROL</div><h2 style="font:600 19px var(--display);margin:0 0 6px">Separate access paths</h2><p class="muted">Admin access uses your verified account. Guest access will use its own 128-digit code.</p><span class="muted">NO GUEST CODE CREATED</span></div>
  </div>
- <div class="panel" id="kalan-cloud-console" style="margin-bottom:16px">
-  <div class="panel-head"><div><div class="eyebrow">YOUR WINDOWS PC</div><h3>KALAN Cloud Player</h3></div><span class="muted">ADMIN ONLY</span></div>
-  <p class="muted" style="margin-bottom:16px">Privately stream your home PC from this page. Only your server-verified admin session can start a stream.</p>
-  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-   <button class="primary" id="kalan-cloud-connect" type="button">▶ Stream PC</button>
-   <button class="back-game" id="kalan-cloud-fullscreen" type="button" disabled>⛶ Fullscreen</button>
-   <span class="muted" id="kalan-cloud-access">ADMIN ACCESS REQUIRED</span>
-  </div>
-  <div id="kalan-cloud-status" class="game-player-note" role="status" aria-live="polite" style="margin-top:14px">CLOUD PLAYER: NOT CONNECTED</div>
-  <div id="kalan-cloud-player" style="display:none;margin-top:14px;background:#080b12;border:1px solid #273147;border-radius:12px;overflow:hidden">
-   <iframe id="kalan-cloud-frame" title="KALAN Cloud PC stream" allow="autoplay; fullscreen; gamepad; clipboard-read; clipboard-write" allowfullscreen referrerpolicy="no-referrer" style="display:block;width:100%;height:min(72vh,760px);min-height:420px;border:0;background:#05070c"></iframe>
-  </div>
-  <p class="muted" id="kalan-cloud-help" style="margin-top:12px">The player will appear here when the secure Windows host is connected. No public or guest streaming access is enabled.</p>
- </div>
- <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-  <div class="panel"><div class="panel-head"><h3>Guest access codes</h3><span class="muted">128 digits</span></div><p class="muted">Guest-code creation, hashing, expiration, and revocation will be handled by a server function—not browser JavaScript.</p><button class="back-game" type="button" disabled style="opacity:.55">Code management · Not configured</button></div>
-  <div class="panel"><div class="panel-head"><h3>Emergency controls</h3><span class="muted">Server-side only</span></div><p class="muted">A future revoke-all action will terminate active guest sessions and invalidate issued codes immediately.</p><button class="back-game" type="button" disabled style="opacity:.55">Revoke all guest access · Not configured</button></div>
- </div>
- <p class="muted" style="margin-top:16px">Build status: dashboard foundation only. Authentication is checked using the existing <code>is_kalangamer_admin</code> Supabase RPC. Streaming and guest-code endpoints are not implemented yet.</p>
+ 
 </section>
 <section class="page" id="page-web">
  <div class="page-head"><div class="eyebrow">BUILT INTO KALANGAMER</div><h1>KALAN Web<span>.</span></h1><p class="muted">Your browser, right inside your gaming space.</p></div>
