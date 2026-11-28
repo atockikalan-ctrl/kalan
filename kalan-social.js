@@ -49,7 +49,7 @@ async function feed(){
  $('feed-posts').innerHTML=rows.length?rows.map(p=>{
   const u=people[p.user_id]||{},likes=(ls||[]).filter(x=>x.post_id===p.id),liked=likes.some(x=>x.user_id===me.id);
   const game=games.find(g=>g[0]===p.game_key)?.[1]||'';
-  const author=p.is_admin_announcement?'Admin':(u.display_name||u.username||'Player');
+  const author=p.body.startsWith('📢 ')?'Admin':(u.display_name||u.username||'Player');
   return '<article class="kalan-post"><div class="kalan-post-head"><div class="kalan-feed-avatar">'+esc((u.display_name||u.username||'P')[0].toUpperCase())+'</div><div class="kalan-post-author"><b>'+esc(author)+'</b><small>@'+esc(u.username||'player')+' · '+new Date(p.created_at).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+'</small></div>'+(p.user_id===me.id?'<button class="kalan-subtle" data-delete-post="'+p.id+'">Delete</button>':'')+'</div><p>'+esc(p.body).replace(/\n/g,'<br>')+'</p>'+(game?'<small class="kalan-post-game">Playing '+esc(game)+'</small>':'')+'<div class="kalan-post-actions"><button class="kalan-like '+(liked?'liked':'')+'" data-like-post="'+p.id+'">'+(liked?'♥':'♡')+' '+likes.length+' likes</button><span class="kalan-post-privacy">'+(p.visibility==='friends'?'Friends':'Community')+'</span></div></article>';
  }).join(''):empty('It is quiet here for now. Share the first little update.');
 }
