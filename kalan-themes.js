@@ -25,7 +25,16 @@ const distros={
 function apply(t,adminMode=false){
  const v=t|| (adminMode?distros.arch:userThemes.rose),root=document.documentElement,b=document.body;
  for(const [k,val] of Object.entries({bg:v.bg,panel:v.panel,panel2:v.panel2,line:v.line,text:v.text,muted:v.muted,purple:v.accent,blue:v.accent,green:v.accent}))root.style.setProperty('--'+k,val);
- b.style.background=v.bg;b.style.color=v.text;b.dataset.kalanTheme=adminMode?'admin-'+(Object.keys(distros).find(k=>distros[k]===v)||'arch'):(Object.keys(userThemes).find(k=>userThemes[k]===v)||'rose');
+ b.style.background=v.bg;b.style.color=v.text;
+ const themeKey=adminMode?(Object.keys(distros).find(k=>distros[k]===v)||'arch'):(Object.keys(userThemes).find(k=>userThemes[k]===v)||'rose');
+ b.dataset.kalanTheme=adminMode?'admin-'+themeKey:themeKey;
+ if(adminMode){
+  b.classList.add('admin-hacker');
+  [...b.classList].filter(x=>x.startsWith('admin-')&&x!=='admin-hacker').forEach(x=>b.classList.remove(x));
+  b.classList.add('admin-'+themeKey);
+ }else{
+  [...b.classList].filter(x=>x.startsWith('admin-')).forEach(x=>b.classList.remove(x));
+ }
  root.style.colorScheme=['#f3e8e7','#e9f2f5'].includes(v.bg)?'light':'dark';
  const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=v.bg;
 }
@@ -95,6 +104,9 @@ function bindAdmin(){
   const key=btn.dataset.distroTheme;const v=distros[key];if(v){btn.querySelector('.distro-theme-mark').textContent=v.logo;btn.querySelector('small').textContent='Full '+v.label+' website skin'}
   btn.onclick=async()=>{
    if(!isAdmin||!currentUser||!distros[key])return;
+   apply(distros[key],true);applyAdminLogo(key);
+   document.querySelectorAll('.distro-theme-choice').forEach(x=>x.classList.toggle('active',x.dataset.distroTheme===key));
+   const status=$('distro-theme-status');if(status)status.textContent=distros[key].label+' theme selected. Saving…';
    const config={distro:key};const {error}=await db.from('profiles').update({theme_config:config}).eq('id',currentUser.id);
    if(error){toast('Could not save admin theme: '+error.message);return}
    profile={...(profile||{}),theme_config:config};apply(distros[key],true);applyAdminLogo(key);
