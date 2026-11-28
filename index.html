@@ -349,6 +349,48 @@ body.admin-hacker .game-player{background:#050805;border-color:#245d31}
 body.admin-hacker .game-player-head,body.admin-hacker .game-player-note{border-color:#245d31;color:#a5efb1}
 @media(prefers-reduced-motion:no-preference){body.admin-hacker .primary:hover,body.admin-hacker .kalan-action:hover{box-shadow:0 0 22px #39ff6970;transform:translateY(-1px)}}
 </style>
+<style id="kalan-admin-distro-themes">
+.distro-theme-choice{display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:13px;border:1px solid #d9c6c3;border-radius:11px;background:#fffaf9;color:#382d30;text-align:left;min-height:112px}
+.distro-theme-choice:hover,.distro-theme-choice.active{border-color:#8b6cff;box-shadow:0 0 0 2px #8b6cff22}
+.distro-theme-choice.active{background:#f4efff}
+.distro-theme-choice small{font-size:10px;color:#77696a}
+.distro-theme-mark{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#e9e5ff;color:#5142a0;font-size:21px;font-weight:800}
+body.admin-hacker .distro-theme-choice{background:#080e09;color:#d8ffe0;border-color:#245d31}
+body.admin-hacker .distro-theme-choice small{color:#75a982}
+body.admin-hacker .distro-theme-choice.active{border-color:#39ff69;background:#0c2111}
+body.admin-hacker.admin-debian{--bg:#10080c;--panel:#1b1017;--panel2:#29151f;--line:#542238;--text:#fff0f4;--muted:#c49aaa;--purple:#ce0058;--blue:#a90048;--green:#e94c83;background:#10080c;color:#fff0f4}
+body.admin-hacker.admin-debian .sidebar{background:#160a10;border-color:#542238}
+body.admin-hacker.admin-debian .brand em,body.admin-hacker.admin-debian .welcome h1 span,body.admin-hacker.admin-debian .page-head h1 span{color:#ed4b83}
+body.admin-hacker.admin-debian .brand-mark{background:#240e19;border:1px solid #ce0058;color:#ff8bad;box-shadow:0 0 18px #ce005844}
+body.admin-hacker.admin-debian .nav button:hover,body.admin-hacker.admin-debian .nav button.active{background:#351322;color:#ff8bad;box-shadow:inset 2px 0 #ce0058}
+body.admin-hacker.admin-debian .panel,body.admin-hacker.admin-debian .game{background:#1b1017!important;border-color:#542238!important;color:#fff0f4}
+body.admin-hacker.admin-debian .primary,body.admin-hacker.admin-debian .kalan-action{background:#ce0058!important;color:white!important;border-color:#ce0058!important}
+body.admin-hacker.admin-debian .hero{background:linear-gradient(120deg,#220d18,#50152d 60%,#180b12);border:1px solid #8d1b48}
+body.admin-hacker.admin-ubuntu{--bg:#180f19;--panel:#241725;--panel2:#302033;--line:#53374f;--text:#fff5ef;--muted:#c5aebf;--purple:#e95420;--blue:#77216f;--green:#e95420;background:#180f19;color:#fff5ef}
+body.admin-hacker.admin-ubuntu .sidebar{background:#211326;border-color:#53374f}
+body.admin-hacker.admin-ubuntu .brand em,body.admin-hacker.admin-ubuntu .welcome h1 span,body.admin-hacker.admin-ubuntu .page-head h1 span{color:#e95420}
+body.admin-hacker.admin-ubuntu .brand-mark{background:#351c36;border:1px solid #e95420;color:#fff}
+body.admin-hacker.admin-ubuntu .nav button:hover,body.admin-hacker.admin-ubuntu .nav button.active{background:#45233f;color:#ff9a70;box-shadow:inset 2px 0 #e95420}
+body.admin-hacker.admin-ubuntu .panel,body.admin-hacker.admin-ubuntu .game{background:#241725!important;border-color:#53374f!important;color:#fff5ef}
+body.admin-hacker.admin-ubuntu .primary,body.admin-hacker.admin-ubuntu .kalan-action{background:#e95420!important;color:white!important;border-color:#e95420!important}
+body.admin-hacker.admin-ubuntu .hero{background:linear-gradient(120deg,#27142a,#552448 60%,#301b28);border:1px solid #82415e}
+body.admin-hacker.admin-cachy{--bg:#101713;--panel:#17221b;--panel2:#202e25;--line:#345541;--text:#eaffef;--muted:#9bb8a3;--purple:#16a34a;--blue:#65c98b;--green:#49df85;background:#101713;color:#eaffef}
+body.admin-hacker.admin-cachy .sidebar{background:#111b15;border-color:#345541}
+body.admin-hacker.admin-cachy .brand em,body.admin-hacker.admin-cachy .welcome h1 span,body.admin-hacker.admin-cachy .page-head h1 span{color:#65c98b}
+body.admin-hacker.admin-cachy .brand-mark{background:#172b20;border:1px solid #49df85;color:#9dffbd}
+body.admin-hacker.admin-cachy .nav button:hover,body.admin-hacker.admin-cachy .nav button.active{background:#1b3928;color:#9dffbd;box-shadow:inset 2px 0 #49df85}
+body.admin-hacker.admin-cachy .panel,body.admin-hacker.admin-cachy .game{background:#17221b!important;border-color:#345541!important;color:#eaffef}
+body.admin-hacker.admin-cachy .primary,body.admin-hacker.admin-cachy .kalan-action{background:#16a34a!important;color:white!important;border-color:#16a34a!important}
+body.admin-hacker.admin-cachy .hero{background:linear-gradient(120deg,#102117,#1e4930 60%,#102018);border:1px solid #345541}
+body.admin-hacker.admin-fedora{--bg:#081522;--panel:#101f30;--panel2:#172b40;--line:#294b6a;--text:#eff8ff;--muted:#9ab7ce;--purple:#51a2da;--blue:#3c91cf;--green:#67c6ef;background:#081522;color:#eff8ff}
+body.admin-hacker.admin-fedora .sidebar{background:#0a1b2b;border-color:#294b6a}
+body.admin-hacker.admin-fedora .brand em,body.admin-hacker.admin-fedora .welcome h1 span,body.admin-hacker.admin-fedora .page-head h1 span{color:#67c6ef}
+body.admin-hacker.admin-fedora .brand-mark{background:#102c45;border:1px solid #3c91cf;color:#bde7ff}
+body.admin-hacker.admin-fedora .nav button:hover,body.admin-hacker.admin-fedora .nav button.active{background:#153653;color:#bde7ff;box-shadow:inset 2px 0 #3c91cf}
+body.admin-hacker.admin-fedora .panel,body.admin-hacker.admin-fedora .game{background:#101f30!important;border-color:#294b6a!important;color:#eff8ff}
+body.admin-hacker.admin-fedora .primary,body.admin-hacker.admin-fedora .kalan-action{background:#3c91cf!important;color:#061521!important;border-color:#3c91cf!important}
+body.admin-hacker.admin-fedora .hero{background:linear-gradient(120deg,#0a1b2b,#123d60 60%,#0a1b2b);border:1px solid #294b6a}
+</style>
 </head>
 <body><div class="shell">
 <aside class="sidebar" id="sidebar"><a class="brand" href="#"><span class="brand-mark">K</span>kalan<em>.</em></a><div class="side-label">MENU</div><nav class="nav"><button class="active" data-page="home"><span>⌂</span>Home</button><button data-page="minecraft-hub"><span>⛏</span>Minecraft</button><button data-page="discover"><span>⌕</span>Discover</button><button data-page="library"><span>▣</span>My library</button><button data-page="media"><span>♫</span>KALAN Media</button><button data-page="web"><span>◎</span>KALAN Web</button><button data-page="challenges"><span>🏆</span>Challenges</button><button data-page="community"><span>◉</span>Community</button><button data-page="friends"><span>♧</span>Friends</button><button data-page="messages"><span>✉</span>Messages</button><button data-page="feed"><span>▤</span>Community feed</button><button data-page="activity"><span>◷</span>Activity</button><button data-page="parties"><span>♧</span>Parties</button><button data-page="game-nights"><span>☾</span>Game Nights</button><button data-page="player-finder"><span>⌕</span>Player Finder</button><button data-page="admin-cloud" id="admin-cloud-nav" hidden><span>⬡</span>Admin Control Room</button></nav><div class="side-label spacer">YOUR SPACE</div><nav class="nav"><button data-page="profile"><span>♙</span>My profile</button><button data-page="leaderboards"><span>♜</span>Leaderboards</button></nav><div class="sidebar-bottom"><div class="tip"><div style="color:#b7a5ff;margin-bottom:8px">✦ YOUR NEXT ADVENTURE</div><b>Find something new to play.</b><p>A whole universe is waiting.</p><button data-page="discover">Explore games →</button></div><div class="user-mini"><div class="avatar" id="side-avatar">K</div><div><b id="side-name">Kalan</b><small id="side-handle">@kalan</small></div></div></div></aside>
@@ -360,7 +402,19 @@ body.admin-hacker .game-player-head,body.admin-hacker .game-player-note{border-c
 </div></section>
 <section class="page" id="page-admin-cloud">
  <div class="page-head"><div class="eyebrow">OWNER CONSOLE · RESTRICTED</div><h1>Admin Control Room<span>.</span></h1><p class="muted">Private controls for your KALAN system. Only accounts approved by the server-side admin check can open this page.</p></div>
- <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-bottom:18px">
+ <div class="panel" id="admin-distro-themes" style="margin:0 0 18px">
+  <div class="panel-head"><div><div class="eyebrow">PERSONALIZATION · ADMIN ONLY</div><h3>Special themes</h3></div><span class="muted">Only visible to you</span></div>
+  <p class="muted" style="margin-bottom:14px">Choose a Linux-inspired look for your private Admin Control Room. The regular KALANGAMER experience stays unchanged for everyone else.</p>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px">
+   <button type="button" class="distro-theme-choice" data-distro-theme="arch"><span class="distro-theme-mark">Λ</span><b>Arch Linux</b><small>Classic Arch look</small></button>
+   <button type="button" class="distro-theme-choice" data-distro-theme="debian"><span class="distro-theme-mark">◉</span><b>Debian</b><small>Debian red</small></button>
+   <button type="button" class="distro-theme-choice" data-distro-theme="ubuntu"><span class="distro-theme-mark">●</span><b>Ubuntu</b><small>Orange & aubergine</small></button>
+   <button type="button" class="distro-theme-choice" data-distro-theme="cachy"><span class="distro-theme-mark">C</span><b>CachyOS</b><small>Green & charcoal</small></button>
+   <button type="button" class="distro-theme-choice" data-distro-theme="fedora"><span class="distro-theme-mark">f</span><b>Fedora</b><small>Fedora blue</small></button>
+  </div>
+  <p class="muted" id="distro-theme-status" role="status" style="margin-top:12px">Arch Linux theme selected.</p>
+ </div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-bottom:18px">
   <div class="panel"><div class="eyebrow">IDENTITY</div><h2 style="font:600 19px var(--display);margin:0 0 6px">Admin verified</h2><p class="muted">Your KALANGAMER admin permission is checked by Supabase.</p><span class="online">● AUTHORIZATION ACTIVE</span></div>
   <div class="panel"><div class="eyebrow">KALAN CLOUD</div><h2 style="font:600 19px var(--display);margin:0 0 6px">Not connected</h2><p class="muted">The secure Windows streaming agent has not been connected yet.</p><span class="muted">STREAM SERVICE: NOT CONFIGURED</span></div>
   <div class="panel"><div class="eyebrow">ACCESS CONTROL</div><h2 style="font:600 19px var(--display);margin:0 0 6px">Separate access paths</h2><p class="muted">Admin access uses your verified account. Guest access will use its own 128-digit code.</p><span class="muted">NO GUEST CODE CREATED</span></div>
@@ -955,10 +1009,38 @@ $('profile-modal').classList.remove('open');toast('Profile updated!');await refr
 (()=>{
  const brand=document.querySelector('.brand-mark');
  const originalBrand=brand?.innerHTML||'K';
- const archMark='<svg viewBox="0 0 256 256" role="img" aria-label="Arch Linux logo" width="25" height="25"><path fill="#39ff69" d="M127.976 0c-11.397 27.936-18.27 46.21-30.959 73.315 7.78 8.245 17.329 17.846 32.837 28.69-16.673-6.859-28.045-13.746-36.544-20.892C77.07 114.992 51.63 163.25 0 256c40.579-23.422 72.035-37.863 101.35-43.373a74.3 74.3 0 0 1-1.926-17.378l.049-1.3c.644-25.992 14.168-45.98 30.188-44.624 16.02 1.357 28.473 23.542 27.83 49.535-.122 4.89-.674 9.596-1.638 13.96C184.851 218.49 215.97 232.894 256 256c-7.893-14.529-14.938-27.626-21.666-40.1-10.598-8.212-21.652-18.9-44.2-30.47 15.498 4.025 26.595 8.67 35.244 13.863C156.973 71.958 151.434 17.038 127.976 0"/></svg>';
- function apply(active){document.body.classList.toggle('admin-hacker',!!active);if(brand)brand.innerHTML=active?archMark:originalBrand;const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=active?'#050805':'#b9787b';}
- window.addEventListener('kalan-admin-theme',e=>apply(e.detail?.active===true));
- if(window.kalanIsAdmin===true)apply(true);else apply(false);
+ const marks={
+ arch:'<svg viewBox="0 0 256 256" role="img" aria-label="Arch Linux" width="25" height="25"><path fill="#39ff69" d="M127.976 0c-11.397 27.936-18.27 46.21-30.959 73.315 7.78 8.245 17.329 17.846 32.837 28.69-16.673-6.859-28.045-13.746-36.544-20.892C77.07 114.992 51.63 163.25 0 256c40.579-23.422 72.035-37.863 101.35-43.373a74.3 74.3 0 0 1-1.926-17.378l.049-1.3c.644-25.992 14.168-45.98 30.188-44.624 16.02 1.357 28.473 23.542 27.83 49.535-.122 4.89-.674 9.596-1.638 13.96C184.851 218.49 215.97 232.894 256 256c-7.893-14.529-14.938-27.626-21.666-40.1-10.598-8.212-21.652-18.9-44.2-30.47 15.498 4.025 26.595 8.67 35.244 13.863C156.973 71.958 151.434 17.038 127.976 0"/></svg>',
+ debian:'<svg viewBox="0 0 100 100" role="img" aria-label="Debian swirl" width="26" height="26"><path d="M50 10C26 9 16 30 25 47c8 15 30 18 39 5 8-12-1-27-13-25-8 1-11 10-7 15 3 4 9 4 11 0" fill="none" stroke="#ed4b83" stroke-width="8" stroke-linecap="round"/></svg>',
+ ubuntu:'<svg viewBox="0 0 100 100" role="img" aria-label="Ubuntu logo" width="26" height="26"><circle cx="50" cy="50" r="29" fill="none" stroke="#fff" stroke-width="9"/><g fill="#fff"><circle cx="50" cy="13" r="9"/><circle cx="18" cy="68" r="9"/><circle cx="82" cy="68" r="9"/></g></svg>',
+ cachy:'<span aria-label="CachyOS logo" style="font:800 23px var(--display);color:#9dffbd">C</span>',
+ fedora:'<span aria-label="Fedora logo" style="font:800 27px var(--display);color:#bde7ff">f</span>'
+ };
+ const themes=['arch','debian','ubuntu','cachy','fedora'];
+ const labels={arch:'Arch Linux',debian:'Debian',ubuntu:'Ubuntu',cachy:'CachyOS',fedora:'Fedora'};
+ let isAdmin=false;
+ function apply(active,theme){
+  isAdmin=!!active;
+  document.body.classList.toggle('admin-hacker',isAdmin);
+  themes.forEach(t=>document.body.classList.toggle('admin-'+t,isAdmin&&theme===t));
+  if(brand)brand.innerHTML=isAdmin?(marks[theme]||marks.arch):originalBrand;
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.content=!isAdmin?'#b9787b':({arch:'#050805',debian:'#10080c',ubuntu:'#180f19',cachy:'#101713',fedora:'#081522'}[theme]||'#050805');
+  document.querySelectorAll('.distro-theme-choice').forEach(b=>b.classList.toggle('active',b.dataset.distroTheme===(theme||'arch')));
+  const status=document.getElementById('distro-theme-status');if(status)status.textContent=(labels[theme||'arch']||'Arch Linux')+' theme selected.';
+ }
+ function bind(){
+  document.querySelectorAll('.distro-theme-choice').forEach(b=>b.addEventListener('click',()=>{
+   if(!isAdmin)return;
+   const theme=b.dataset.distroTheme;
+   try{localStorage.setItem('kalan-admin-distro-theme',theme);}catch(_){}
+   apply(true,theme);
+  }));
+ }
+ let saved='arch';try{saved=localStorage.getItem('kalan-admin-distro-theme')||'arch';}catch(_){}
+ window.addEventListener('kalan-admin-theme',e=>{isAdmin=e.detail?.active===true;apply(isAdmin,saved);});
+ if(window.kalanIsAdmin===true)apply(true,saved);else apply(false,'arch');
+ bind();
 })();
 </script>
 </body></html>
