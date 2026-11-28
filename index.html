@@ -313,6 +313,42 @@ body{background:#b9787b;color:#342b2c}
 #page-admin-cloud .panel{min-height:150px}
 #page-admin-cloud .game-player-note{background:#101722;border-radius:8px;padding:12px}
 </style>
+
+<style id="kalan-admin-hacker-theme">
+/* Owner-only cinematic terminal theme. Activated only after the server-side admin RPC succeeds. */
+body.admin-hacker{--bg:#050805;--panel:#0b100c;--panel2:#101a12;--line:#1c3a23;--text:#d8ffe0;--muted:#75a982;--purple:#39ff69;--blue:#21c957;--green:#39ff69;background:#050805;color:#d8ffe0;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+body.admin-hacker .sidebar{background:#050805;border-color:#174323}
+body.admin-hacker .brand,body.admin-hacker .user-mini,body.admin-hacker .crumb,body.admin-hacker .welcome h1,body.admin-hacker .page-head h1,body.admin-hacker .section h2{color:#d8ffe0}
+body.admin-hacker .brand em,body.admin-hacker .welcome h1 span,body.admin-hacker .page-head h1 span{color:#39ff69}
+body.admin-hacker .brand-mark{background:#07120a;border:1px solid #39ff69;color:#39ff69;box-shadow:0 0 18px #39ff6940;border-radius:8px}
+body.admin-hacker .nav button{color:#8fc99a;border-radius:5px}
+body.admin-hacker .nav button:hover,body.admin-hacker .nav button.active{background:#0c2111;color:#39ff69;box-shadow:inset 2px 0 #39ff69}
+body.admin-hacker .topbar,body.admin-hacker .user-mini,body.admin-hacker .footer{border-color:#174323}
+body.admin-hacker .search,body.admin-hacker input,body.admin-hacker textarea,body.admin-hacker select{background:#050a06!important;color:#caffd2!important;border-color:#245d31!important}
+body.admin-hacker .panel,body.admin-hacker .game,body.admin-hacker .kalan-post,body.admin-hacker .modal,body.admin-hacker .km-upload,body.admin-hacker .km-card{background:#080e09!important;color:#d8ffe0;border-color:#1c4926!important;box-shadow:0 0 18px #39ff690b}
+body.admin-hacker .primary,body.admin-hacker .kalan-action,body.admin-hacker .chat-compose button,body.admin-hacker .km-play{background:#39ff69!important;color:#031006!important;border:1px solid #39ff69!important;border-radius:5px;font-family:inherit;box-shadow:0 0 14px #39ff6930}
+body.admin-hacker button{border-radius:5px}
+body.admin-hacker .filter,body.admin-hacker .back-game,body.admin-hacker .sidebar-toggle,body.admin-hacker .friend-action,body.admin-hacker .friend-card button,body.admin-hacker .chat-tools button,body.admin-hacker .km-tabs button{background:#050805!important;color:#a5efb1!important;border:1px solid #245d31!important}
+body.admin-hacker .filter.active,body.admin-hacker .km-tabs button.active{background:#0b2410!important;color:#39ff69!important;border-color:#39ff69!important}
+body.admin-hacker .muted,body.admin-hacker .eyebrow,body.admin-hacker .game-info p,body.admin-hacker .meta,body.admin-hacker .footer,body.admin-hacker .crumb span{color:#75a982!important}
+body.admin-hacker .hero{background:linear-gradient(120deg,#07120a,#0b2410 60%,#061009);border:1px solid #245d31}
+body.admin-hacker .hero h2,body.admin-hacker .hero p{color:#d8ffe0}
+body.admin-hacker .pill{background:#061009;color:#39ff69;border-color:#245d31}
+body.admin-hacker .light{background:#39ff69;color:#031006}
+body.admin-hacker .cover{filter:saturate(.72)}
+body.admin-hacker .bubble{background:#102016;color:#d8ffe0}
+body.admin-hacker .bubble.mine{background:#145d27;color:#effff1}
+body.admin-hacker .profile-cover{background:linear-gradient(120deg,#07120a,#12331a 60%,#061009)}
+body.admin-hacker .profile-stat,body.admin-hacker .profile-badge,body.admin-hacker .profile-extra,body.admin-hacker .kalan-level-pill{background:#0c1b10;color:#a5efb1;border-color:#245d31}
+body.admin-hacker .game-icon-title{color:#d8ffe0}
+body.admin-hacker .toast{background:#08110a;color:#d8ffe0;border-color:#39ff69}
+body.admin-hacker .online,body.admin-hacker .live{color:#39ff69;background:#39ff69;box-shadow:0 0 9px #39ff69}
+body.admin-hacker .tip{background:#08110a;border-color:#245d31;color:#d8ffe0}
+body.admin-hacker .tip b,body.admin-hacker .tip p,body.admin-hacker .tip button{color:#a5efb1}
+body.admin-hacker .game-player{background:#050805;border-color:#245d31}
+body.admin-hacker .game-player-head,body.admin-hacker .game-player-note{border-color:#245d31;color:#a5efb1}
+@media(prefers-reduced-motion:no-preference){body.admin-hacker .primary:hover,body.admin-hacker .kalan-action:hover{box-shadow:0 0 22px #39ff6970;transform:translateY(-1px)}}
+</style>
 </head>
 <body><div class="shell">
 <aside class="sidebar" id="sidebar"><a class="brand" href="#"><span class="brand-mark">K</span>kalan<em>.</em></a><div class="side-label">MENU</div><nav class="nav"><button class="active" data-page="home"><span>⌂</span>Home</button><button data-page="minecraft-hub"><span>⛏</span>Minecraft</button><button data-page="discover"><span>⌕</span>Discover</button><button data-page="library"><span>▣</span>My library</button><button data-page="media"><span>♫</span>KALAN Media</button><button data-page="web"><span>◎</span>KALAN Web</button><button data-page="challenges"><span>🏆</span>Challenges</button><button data-page="community"><span>◉</span>Community</button><button data-page="friends"><span>♧</span>Friends</button><button data-page="messages"><span>✉</span>Messages</button><button data-page="feed"><span>▤</span>Community feed</button><button data-page="activity"><span>◷</span>Activity</button><button data-page="parties"><span>♧</span>Parties</button><button data-page="game-nights"><span>☾</span>Game Nights</button><button data-page="player-finder"><span>⌕</span>Player Finder</button><button data-page="admin-cloud" id="admin-cloud-nav" hidden><span>⬡</span>Admin Control Room</button></nav><div class="side-label spacer">YOUR SPACE</div><nav class="nav"><button data-page="profile"><span>♙</span>My profile</button><button data-page="leaderboards"><span>♜</span>Leaderboards</button></nav><div class="sidebar-bottom"><div class="tip"><div style="color:#b7a5ff;margin-bottom:8px">✦ YOUR NEXT ADVENTURE</div><b>Find something new to play.</b><p>A whole universe is waiting.</p><button data-page="discover">Explore games →</button></div><div class="user-mini"><div class="avatar" id="side-avatar">K</div><div><b id="side-name">Kalan</b><small id="side-handle">@kalan</small></div></div></div></aside>
@@ -528,6 +564,7 @@ async function refreshSession(sessionValue){
  let isOwnerAdmin=false;
  if(currentUser){try{const {data:adminFlag,error:adminError}=await sb.rpc('is_kalangamer_admin');isOwnerAdmin=!adminError&&adminFlag===true;}catch(_){isOwnerAdmin=false;}}
  window.kalanIsAdmin=isOwnerAdmin;
+ window.dispatchEvent(new CustomEvent('kalan-admin-theme',{detail:{active:isOwnerAdmin}}));
  const adminNav=el('admin-cloud-nav');if(adminNav)adminNav.hidden=!isOwnerAdmin;if(!isOwnerAdmin&&document.getElementById('page-admin-cloud')?.classList.contains('active'))showPage('home');
  el('account-title').textContent=currentUser?(isOwnerAdmin?'Hello, Admin':'Your account'):'Join KALAN';
  el('account-greeting').textContent=currentUser?(isOwnerAdmin?'Welcome back, Admin. You have owner access to KALANGAMER.':"You're signed in to KALAN."):"You're signed in to KALAN.";
@@ -930,4 +967,15 @@ $('profile-modal').classList.remove('open');toast('Profile updated!');await refr
 <script src="/kalan-arcade.js"></script>
 <script src="/kalan-media.js"></script>
 <script src="/kalan-activity.js"></script>
+
+<script id="kalan-admin-theme-controller">
+(()=>{
+ const brand=document.querySelector('.brand-mark');
+ const originalBrand=brand?.innerHTML||'K';
+ const archMark='<svg viewBox="0 0 256 256" role="img" aria-label="Arch Linux logo" width="25" height="25"><path fill="#39ff69" d="M127.976 0c-11.397 27.936-18.27 46.21-30.959 73.315 7.78 8.245 17.329 17.846 32.837 28.69-16.673-6.859-28.045-13.746-36.544-20.892C77.07 114.992 51.63 163.25 0 256c40.579-23.422 72.035-37.863 101.35-43.373a74.3 74.3 0 0 1-1.926-17.378l.049-1.3c.644-25.992 14.168-45.98 30.188-44.624 16.02 1.357 28.473 23.542 27.83 49.535-.122 4.89-.674 9.596-1.638 13.96C184.851 218.49 215.97 232.894 256 256c-7.893-14.529-14.938-27.626-21.666-40.1-10.598-8.212-21.652-18.9-44.2-30.47 15.498 4.025 26.595 8.67 35.244 13.863C156.973 71.958 151.434 17.038 127.976 0"/></svg>';
+ function apply(active){document.body.classList.toggle('admin-hacker',!!active);if(brand)brand.innerHTML=active?archMark:originalBrand;const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=active?'#050805':'#b9787b';}
+ window.addEventListener('kalan-admin-theme',e=>apply(e.detail?.active===true));
+ if(window.kalanIsAdmin===true)apply(true);else apply(false);
+})();
+</script>
 </body></html>
